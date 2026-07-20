@@ -1,5 +1,5 @@
 {
-  "release_version": "1.0.0-rc2",
+  "release_version": "1.0.0-rc3",
   "files": [
     ".agents/skills/decision-analysis/SKILL.md",
     ".agents/skills/decision-analysis/agents/openai.yaml",

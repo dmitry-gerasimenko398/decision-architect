@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-rc3 — first-time setup guidance
+
+- Added a prominent download-and-use workflow for first-time visitors.
+- Clarified that the supported Skill workflow is repository-scoped and requires the complete project.
+- Distinguished ordinary Codex use from optional Python CLI commands.
+- Aligned the Windows quickstart and Codex usage documentation.
+- Preserved all mathematics, recommendations, contracts, and product behavior.
+
 ## 1.0.0-rc2 — cross-platform reproducibility fix
 
 - Added a deterministic LF checkout policy for release text artifacts.

@@ -1,14 +1,36 @@
 # Windows quickstart
 
-This guide assumes you have Codex and a downloaded or cloned copy of Decision Architect. You do not need to understand Git or JSON to use the Skill.
+This guide is for first-time users. You need the Codex app and Python 3.12 or a compatible Python 3 installation. You do not need Git, JSON knowledge, an API key, an external backend, or additional Python packages.
 
-## 1. Open the project in Codex
+## 1. Download the complete project
 
-1. In Codex, choose the folder containing `README.md` and `decision_architect/`.
-2. Confirm that the project name is `decision-architect`.
-3. Keep the conversation in this project so generated working files remain under its ignored `sessions/` directory.
+### Option A — Download ZIP without Git
 
-## 2. Start the Skill
+1. Open the Decision Architect repository page on GitHub.
+2. Select **Code**.
+3. Select **Download ZIP**.
+4. Extract the downloaded archive to a folder you can find again.
+5. Keep the complete extracted folder structure intact.
+
+### Option B — Clone with Git
+
+Open PowerShell and run:
+
+```powershell
+git clone https://github.com/dmitry-gerasimenko398/decision-architect.git
+```
+
+The complete repository is required. The Skill uses the included deterministic Python engine, schemas, validation, and report generator; downloading only `.agents/skills/decision-analysis/` is not the supported complete workflow.
+
+## 2. Open the repository root in Codex
+
+1. In Codex, open the extracted or cloned `decision-architect` folder.
+2. Confirm that this repository root—the folder containing `README.md`, `.agents/`, and `decision_architect/`—is the current project.
+3. Keep the conversation in this project so generated working files stay under its ignored `sessions/` directory.
+
+No separate Skill installation is required for the supported repository-scoped workflow. Codex discovers `.agents/skills/decision-analysis/` when the complete repository root is opened as the project. The Skill is not globally installed by this process.
+
+## 3. Start the Skill
 
 Type:
 
@@ -16,7 +38,7 @@ Type:
 $decision-analysis
 ```
 
-Then describe the choice normally. For example:
+Then describe the decision in natural language. For example:
 
 ```text
 I will visit this restaurant eight more times. Should I try a new dish or order the best one I already know?
@@ -28,23 +50,18 @@ or:
 I’m not sure which of three job options to choose.
 ```
 
-The Skill should invite ordinary language, not ask you to write JSON.
+The Skill should invite ordinary language; you do not need to write JSON.
 
-## 3. What the Skill does automatically
+## 4. What happens before calculation
 
 Codex will:
 
 1. Explain whether the decision fits `multi_criteria` or `sequential_exploration`.
 2. Ask one to three related questions at a time.
 3. Separate facts, uncertain estimates, preferences, hard constraints, assumptions, and settings.
-4. Create a draft model inside ignored local working storage.
-5. Validate the draft and show a complete review.
-6. Wait for exact confirmation.
-7. Run deterministic Python analysis only after confirmation.
-8. Validate the saved result and generate a local HTML report.
-9. Explain the stored result conditionally.
-
-## 4. Confirmation gate
+4. Create a draft model in ignored local working storage.
+5. Validate the draft and show a complete proposed-model review.
+6. Wait for exact confirmation without calculating a recommendation.
 
 Before confirmation, expect:
 
@@ -58,27 +75,31 @@ Only this exact reply authorizes calculation:
 CONFIRM
 ```
 
-“Okay,” “continue,” silence, or an earlier agreement is not enough. Any later model change requires a new review and fresh `CONFIRM`.
+“Okay,” “continue,” silence, or earlier agreement is not enough. Any model change requires a revised review and a fresh `CONFIRM`.
 
-## 5. Open the released demonstrations
+## 5. Calculation and generated report
 
-No Python command is needed to view the checked-in reports. In File Explorer, open the `reports` folder and double-click:
+After exact confirmation, deterministic Python validates the confirmed model, performs the numerical analysis, saves result JSON, and generates a self-contained HTML report. A normal working report is saved under:
 
 ```text
-index.html
+sessions\<decision-name>\report.html
 ```
 
-The reports are standalone files. They do not need a web server, API key, or internet connection.
+Codex gives you the exact local path when generation succeeds. Open the report in a browser; it needs no server or external resource.
 
-## 6. Run Python commands manually
+To browse the checked-in demonstrations without running Python, open `reports\index.html` in File Explorer. Sanitized end-to-end examples are also available in `demo_sessions\`.
 
-Manual commands are separate from the Codex interview. Open PowerShell in the repository folder and try:
+## 6. Optional Python CLI usage
+
+Ordinary Skill users do not need to run Python commands manually. The CLI is available for developers, reviewers, and manual verification of existing JSON files.
+
+Open PowerShell in the repository root and check Python:
 
 ```powershell
 py --version
 ```
 
-If that works, verify the complete release:
+Verify the complete release:
 
 ```powershell
 py -m decision_architect verify-release
@@ -90,7 +111,7 @@ Run only the tests:
 py -m unittest discover -s tests -v
 ```
 
-Regenerate one result and report:
+Regenerate one released result and report:
 
 ```powershell
 py -m decision_architect analyze examples\job-choice.json --output outputs\job-choice-result.json
@@ -118,6 +139,7 @@ Codex environments may provide a bundled runtime at a path that varies by comput
 ## 8. Privacy and local files
 
 - No API key is required.
+- No additional Python package is required.
 - No external backend receives the model.
 - Working sessions are stored locally under `sessions/` and ignored by Git.
 - Do not enter unnecessary names, addresses, account data, health details, or other sensitive information.

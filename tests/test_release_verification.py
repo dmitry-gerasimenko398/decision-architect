@@ -38,7 +38,7 @@ class ReleaseVerificationTests(unittest.TestCase):
         cls.report = verify_release(PROJECT_ROOT, run_tests=False)
 
     def clean_copy(self, parent: str) -> Path:
-        destination = Path(parent) / "decision-architect-1.0.0-rc2"
+        destination = Path(parent) / "decision-architect-1.0.0-rc3"
         return create_clean_copy(PROJECT_ROOT, destination)
 
     def test_core_release_verification_passes(self) -> None:
@@ -146,16 +146,16 @@ class ReleaseVerificationTests(unittest.TestCase):
                 _report_security_check(clean)
 
     def test_release_and_component_versions_are_intentionally_distinct(self) -> None:
-        self.assertEqual(RELEASE_VERSION, "1.0.0-rc2")
-        self.assertEqual(REPORT_VERSION, "1.0.0-rc2")
+        self.assertEqual(RELEASE_VERSION, "1.0.0-rc3")
+        self.assertEqual(REPORT_VERSION, "1.0.0-rc3")
         self.assertEqual((MODEL_VERSION, RESULT_VERSION, ENGINE_VERSION), ("1.0", "1.0", "0.4.0"))
-        self.assertIn("release 1.0.0-rc2", _version_check(PROJECT_ROOT))
+        self.assertIn("release 1.0.0-rc3", _version_check(PROJECT_ROOT))
 
     def test_inconsistent_package_version_is_detected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             clean = self.clean_copy(temporary)
             init = clean / "decision_architect" / "__init__.py"
-            init.write_text(init.read_text(encoding="utf-8").replace("1.0.0-rc2", "9.9.9"), encoding="utf-8")
+            init.write_text(init.read_text(encoding="utf-8").replace("1.0.0-rc3", "9.9.9"), encoding="utf-8")
             with self.assertRaisesRegex(ReleaseVerificationError, "Package version"):
                 _version_check(clean)
 
@@ -183,7 +183,85 @@ class ReleaseVerificationTests(unittest.TestCase):
         )
 
     def test_readme_commands_and_release_documents_pass(self) -> None:
-        self.assertIn("required release documents", _documentation_check(PROJECT_ROOT))
+        self.assertIn("first-time workflow", _documentation_check(PROJECT_ROOT))
+
+    def test_readme_first_screen_contains_complete_three_step_workflow(self) -> None:
+        readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        first_screen = readme[: readme.index("## Problem, solution, and difference")]
+        expected = (
+            "## Start here — use Decision Architect in three steps",
+            "### Requirements",
+            "### 1. Download the complete project",
+            "### 2. Open the project in Codex",
+            "### 3. Start a decision",
+            "Download ZIP",
+            "$decision-analysis",
+            "CONFIRM",
+        )
+        for phrase in expected:
+            self.assertIn(phrase, first_screen)
+
+    def test_readme_requires_complete_repository_without_global_install_claim(self) -> None:
+        readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("The complete repository is required", readme)
+        self.assertIn("No separate Skill installation is required", readme)
+        self.assertIn("repository-scoped Skill", readme)
+        self.assertNotIn("globally installed Skill", readme)
+        self.assertIn("Downloading only the Skill folder is not the supported complete workflow", readme)
+
+    def test_readme_distinguishes_ordinary_skill_use_from_optional_cli(self) -> None:
+        readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertLess(readme.index("## Recommended ordinary workflow"), readme.index("## Optional advanced Python CLI"))
+        self.assertIn("Ordinary Skill users do not need to run these commands or understand JSON", readme)
+        self.assertIn("developers, reviewers, and manual verification", readme)
+
+    def test_readme_beginner_links_target_release_files(self) -> None:
+        readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        targets = (
+            "docs/QUICKSTART_WINDOWS.md",
+            "reports/index.html",
+            "docs/CONTEST_DEMO.md",
+            "docs/MATHEMATICAL_METHODS.md",
+        )
+        for target in targets:
+            self.assertIn(f"]({target})", readme)
+            self.assertTrue((PROJECT_ROOT / target).is_file())
+
+    def test_windows_quickstart_matches_repository_scoped_workflow(self) -> None:
+        guide = (PROJECT_ROOT / "docs" / "QUICKSTART_WINDOWS.md").read_text(encoding="utf-8")
+        for phrase in (
+            "Download ZIP",
+            "complete repository",
+            "No separate Skill installation is required",
+            "$decision-analysis",
+            "CONFIRM",
+            "sessions\\<decision-name>\\report.html",
+            "replace `py` with `python`",
+            "No API key",
+            "No additional Python package",
+        ):
+            self.assertIn(phrase, guide)
+
+    def test_codex_usage_preserves_conversational_and_deterministic_boundary(self) -> None:
+        usage = (PROJECT_ROOT / "docs" / "CODEX_USAGE.md").read_text(encoding="utf-8")
+        self.assertIn("repository-scoped Skill", usage)
+        self.assertIn("complete Decision Architect repository", usage)
+        self.assertIn("Downloading only the Skill folder is not the supported complete workflow", usage)
+        self.assertIn("exact reply `CONFIRM` before calculation", usage)
+        self.assertIn("Python is responsible for authoritative numerical calculations", usage)
+        self.assertIn("Direct Python CLI commands are optional", usage)
+        self.assertNotIn("globally installed Skill", usage)
+
+    def test_readme_faq_answers_first_time_installation_questions(self) -> None:
+        readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+        for heading in (
+            "### Do I install the Skill separately?",
+            "### Can I download only the Skill folder?",
+            "### Do I need an OpenAI API key?",
+            "### Do I need to run the Python commands manually?",
+            "### Is the recommendation objectively correct?",
+        ):
+            self.assertIn(heading, readme)
 
     def test_working_sessions_are_ignored_by_git_policy(self) -> None:
         ignore = (PROJECT_ROOT / ".gitignore").read_text(encoding="utf-8")

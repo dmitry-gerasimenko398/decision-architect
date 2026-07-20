@@ -11,7 +11,7 @@ from .models import (
     TriangularDistribution,
 )
 
-__version__ = "1.0.0-rc2"
+__version__ = "1.0.0-rc3"
 
 __all__ = [
     "Alternative",

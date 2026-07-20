@@ -21,11 +21,11 @@ from .result_serialization import result_to_json_text, validate_result, write_re
 from .validation import validate_model
 
 
-RELEASE_VERSION = "1.0.0-rc2"
+RELEASE_VERSION = "1.0.0-rc3"
 MODEL_VERSION = "1.0"
 RESULT_VERSION = "1.0"
 ENGINE_VERSION = "0.4.0"
-REPORT_VERSION = "1.0.0-rc2"
+REPORT_VERSION = "1.0.0-rc3"
 MANIFEST_NAME = "RELEASE_MANIFEST.json"
 
 ARTIFACTS = (
@@ -408,6 +408,15 @@ def _documentation_check(root: Path) -> str:
     readme_lower = readme.lower()
     required_phrases = (
         "No API key",
+        "Start here — use Decision Architect in three steps",
+        "Download ZIP",
+        "$decision-analysis",
+        "CONFIRM",
+        "No separate Skill installation is required for the supported contest workflow",
+        "The complete repository is required",
+        "Optional advanced Python CLI",
+        "docs/QUICKSTART_WINDOWS.md",
+        "reports/index.html",
         "Generated-artifact policy",
         "py -m decision_architect verify-release",
         "probability that the real-life decision will succeed",
@@ -415,6 +424,36 @@ def _documentation_check(root: Path) -> str:
     for phrase in required_phrases:
         if phrase.lower() not in readme_lower:
             raise ReleaseVerificationError(f"README is missing required release text: {phrase}")
+
+    quickstart = (root / "docs" / "QUICKSTART_WINDOWS.md").read_text(encoding="utf-8")
+    quickstart_phrases = (
+        "Download ZIP",
+        "complete repository",
+        "No separate Skill installation is required",
+        "$decision-analysis",
+        "CONFIRM",
+        "sessions\\<decision-name>\\report.html",
+        "py -m decision_architect verify-release",
+        "replace `py` with `python`",
+        "No API key",
+        "No additional Python package",
+    )
+    for phrase in quickstart_phrases:
+        if phrase.lower() not in quickstart.lower():
+            raise ReleaseVerificationError(f"Windows quickstart is missing: {phrase}")
+
+    codex_usage = (root / "docs" / "CODEX_USAGE.md").read_text(encoding="utf-8")
+    codex_usage_phrases = (
+        "repository-scoped Skill",
+        "complete Decision Architect repository",
+        "Downloading only the Skill folder is not the supported complete workflow",
+        "exact reply `CONFIRM` before calculation",
+        "Python is responsible for authoritative numerical calculations",
+        "Direct Python CLI commands are optional",
+    )
+    for phrase in codex_usage_phrases:
+        if phrase.lower() not in codex_usage.lower():
+            raise ReleaseVerificationError(f"Codex usage documentation is missing: {phrase}")
     cli_source = (root / "decision_architect" / "cli.py").read_text(encoding="utf-8")
     for command in ("analyze", "report", "report-index", "verify-release"):
         if f'add_parser(\n        "{command}"' not in cli_source and f'add_parser("{command}"' not in cli_source:
@@ -422,7 +461,7 @@ def _documentation_check(root: Path) -> str:
     limitations = (root / "KNOWN_LIMITATIONS.md").read_text(encoding="utf-8")
     if "not implemented" not in limitations or "Bayesian networks" not in limitations:
         raise ReleaseVerificationError("Future dependency-aware modes are not truthfully documented.")
-    return "required release documents, commands, policies, and truthful limitations are present"
+    return "first-time workflow, release documents, commands, policies, and limitations are present"
 
 
 def _artifact_check(root: Path) -> str:
