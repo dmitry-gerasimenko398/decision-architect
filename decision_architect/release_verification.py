@@ -17,15 +17,15 @@ from typing import Callable
 
 from .engine import analyze_file
 from .reporting import generate_demo_index, generate_report
-from .result_serialization import result_to_json_text, validate_result
+from .result_serialization import result_to_json_text, validate_result, write_result_json
 from .validation import validate_model
 
 
-RELEASE_VERSION = "1.0.0-rc1"
+RELEASE_VERSION = "1.0.0-rc2"
 MODEL_VERSION = "1.0"
 RESULT_VERSION = "1.0"
 ENGINE_VERSION = "0.4.0"
-REPORT_VERSION = "1.0.0-rc1"
+REPORT_VERSION = "1.0.0-rc2"
 MANIFEST_NAME = "RELEASE_MANIFEST.json"
 
 ARTIFACTS = (
@@ -48,6 +48,7 @@ ARTIFACTS = (
 )
 
 REQUIRED_FILES = {
+    ".gitattributes",
     "VERSION",
     "README.md",
     "LICENSE",
@@ -109,6 +110,29 @@ REPORT_FORBIDDEN_PATTERNS = (
     "http-equiv=\"refresh\"",
     "http-equiv='refresh'",
 )
+
+LF_TEXT_PATTERNS = (
+    "*.py",
+    "*.md",
+    "*.json",
+    "*.html",
+    "*.css",
+    "*.js",
+    "*.yml",
+    "*.yaml",
+    "*.toml",
+    "*.txt",
+    "*.csv",
+    "*.svg",
+    "*.xml",
+    "*.ini",
+    "*.cfg",
+    "*.ps1",
+    "*.sh",
+)
+
+TEXT_SUFFIXES = {Path(pattern).suffix for pattern in LF_TEXT_PATTERNS}
+GENERATED_TEXT_PREFIXES = ("outputs/", "reports/", "demo_sessions/")
 
 
 class ReleaseVerificationError(ValueError):
@@ -209,6 +233,47 @@ def _manifest_check(root: Path) -> str:
     if not re.search(r"(?m)^sessions/$", ignore):
         raise ReleaseVerificationError(".gitignore must ignore the entire sessions/ directory.")
     return f"{len(files)} explicitly allowlisted files; working sessions excluded"
+
+
+def _line_ending_policy_check(root: Path) -> str:
+    attributes = (root / ".gitattributes").read_text(encoding="utf-8")
+    attribute_lines = {
+        line.strip()
+        for line in attributes.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    }
+    missing = [
+        pattern for pattern in LF_TEXT_PATTERNS if f"{pattern} text eol=lf" not in attribute_lines
+    ]
+    if missing:
+        raise ReleaseVerificationError(
+            ".gitattributes lacks canonical LF rules for: " + ", ".join(missing)
+        )
+
+    checked = 0
+    generated = 0
+    for relative in load_release_manifest(root):
+        path = root / relative
+        if path.suffix.lower() not in TEXT_SUFFIXES and relative not in {
+            ".gitattributes",
+            ".gitignore",
+            "VERSION",
+        }:
+            continue
+        content = path.read_bytes()
+        if b"\r" in content:
+            raise ReleaseVerificationError(f"Non-canonical CR byte detected in {relative}.")
+        checked += 1
+        if relative.startswith(GENERATED_TEXT_PREFIXES):
+            if not content.endswith(b"\n") or content.endswith(b"\n\n"):
+                raise ReleaseVerificationError(
+                    f"Generated text must end with exactly one LF newline: {relative}."
+                )
+            generated += 1
+    return (
+        f"{len(LF_TEXT_PATTERNS)} LF patterns enforced; {checked} release text files canonical; "
+        f"{generated} generated files have one final LF"
+    )
 
 
 def _privacy_check(root: Path) -> str:
@@ -374,7 +439,9 @@ def _artifact_check(root: Path) -> str:
             result = analyze_file(model_path)
             result_text = result_to_json_text(result)
             expected_result = root / "outputs" / result_name
-            if result_text != expected_result.read_text(encoding="utf-8"):
+            generated_result = temporary_root / "outputs" / result_name
+            write_result_json(result, generated_result)
+            if generated_result.read_bytes() != expected_result.read_bytes():
                 raise ReleaseVerificationError(f"Regenerated result differs: {result_name}")
             if validate_result(json.loads(result_text)):
                 raise ReleaseVerificationError(f"Generated result does not validate: {result_name}")
@@ -519,6 +586,7 @@ def verify_release(root: str | Path | None = None, *, run_tests: bool = True) ->
             checks.append(CheckResult(name, True, detail))
 
     run("release manifest and working-session policy", _manifest_check)
+    run("canonical LF checkout and generated-text policy", _line_ending_policy_check)
     run("privacy and machine-path scan", _privacy_check)
     run("unresolved placeholder scan", _placeholder_check)
     run("report security and external resources", _report_security_check)

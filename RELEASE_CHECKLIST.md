@@ -1,4 +1,4 @@
-# Release checklist — 1.0.0-rc1
+# Release checklist — 1.0.0-rc2
 
 ## Automated
 

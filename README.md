@@ -1,6 +1,6 @@
 # Decision Architect
 
-**Release candidate:** `1.0.0-rc1` · **OpenAI Build Week project**
+**Release candidate:** `1.0.0-rc2` · **OpenAI Build Week project**
 
 Decision Architect is **a reusable Codex Skill with an adaptive interview, deterministic Python decision engine, validated JSON contracts, and self-contained local HTML reports**.
 
@@ -174,11 +174,11 @@ Development usage and conversational judgment boundaries are documented in [Code
 
 | Component | Version |
 |---|---|
-| Overall project and Skill release | `1.0.0-rc1` |
+| Overall project and Skill release | `1.0.0-rc2` |
 | Decision model contract | `1.0` |
 | Decision result contract | `1.0` |
 | Mathematical engine recorded in results | `0.4.0` |
-| Current report generator | `1.0.0-rc1` |
+| Current report generator | `1.0.0-rc2` |
 
 Overall release changes do not rewrite historical numerical results.
 

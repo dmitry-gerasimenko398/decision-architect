@@ -1,2 +1,2 @@
-# Decision Architect 1.0.0-rc1 has no third-party runtime dependencies.
+# Decision Architect 1.0.0-rc2 has no third-party runtime dependencies.
 # The contest release uses Python's standard library only.

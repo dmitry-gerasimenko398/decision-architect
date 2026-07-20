@@ -20,6 +20,7 @@ from .sequential_exploration import (
     compare_actions,
 )
 from .sensitivity import WinnerSwitch, WeightSensitivityOutcome
+from .text_io import atomic_write_utf8_lf
 
 
 RESULT_VERSION = "1.0"
@@ -1252,6 +1253,4 @@ def result_to_json_text(result: dict[str, Any]) -> str:
 
 def write_result_json(result: dict[str, Any], path: str | Path) -> Path:
     target = Path(path)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(result_to_json_text(result), encoding="utf-8")
-    return target
+    return atomic_write_utf8_lf(target, result_to_json_text(result))

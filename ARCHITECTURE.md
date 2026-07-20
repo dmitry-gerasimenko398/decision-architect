@@ -220,6 +220,6 @@ Recommended output sections:
 ## Deferred implementation choices
 
 - A later result-contract revision may preserve original multi-criteria display labels, eliminating the report-only ID humanization fallback.
-- A future reviewed version may add dependency-aware uncertainty through validated correlation matrices, copulas, Bayesian networks, or influence diagrams. None is implemented in `1.0.0-rc1`.
+- A future reviewed version may add dependency-aware uncertainty through validated correlation matrices, copulas, Bayesian networks, or influence diagrams. None is implemented in `1.0.0-rc2`.
 
 These choices must preserve the approved contracts and require their corresponding reviewed phase.

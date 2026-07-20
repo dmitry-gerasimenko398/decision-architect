@@ -5,7 +5,7 @@ description: Turn an informal personal decision into an adaptive, user-confirmed
 
 # Decision Analysis
 
-Release version: `1.0.0-rc1`.
+Release version: `1.0.0-rc2`.
 
 Guide a non-technical user from a short description to a confirmed model. Keep conversational judgment separate from deterministic Python. Never perform authoritative calculations mentally.
 

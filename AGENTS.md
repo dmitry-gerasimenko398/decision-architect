@@ -39,7 +39,7 @@
 - Roll back all confirmation artifacts if any finalization write fails; never leave a partially confirmed session.
 - Confine session paths to the selected `sessions/` root and store only model-relevant information with transparent status and provenance.
 - Treat `sessions/` as ignored working storage. Publish only deliberately sanitized artifacts listed in the release manifest.
-- Preserve the version distinction: overall release and Skill `1.0.0-rc1`, model/result contracts `1.0`, engine `0.4.0`, and current report generator `1.0.0-rc1`.
+- Preserve the version distinction: overall release and Skill `1.0.0-rc2`, model/result contracts `1.0`, engine `0.4.0`, and current report generator `1.0.0-rc2`.
 - Define simulated win probability as modeled first-place frequency, never real-life success probability.
 - Keep dependency-aware uncertainty, Bayesian networks, and influence diagrams explicitly unimplemented unless a later reviewed phase changes scope.
 - Ensure Windows commands use PowerShell-compatible syntax and project-relative paths.

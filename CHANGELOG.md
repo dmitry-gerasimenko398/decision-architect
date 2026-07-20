@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0-rc2 — cross-platform reproducibility fix
+
+- Added a deterministic LF checkout policy for release text artifacts.
+- Made generated-text writes explicitly atomic UTF-8 with canonical LF endings.
+- Restored byte-identical report reproduction in fresh Windows checkouts.
+- Preserved all mathematical results, contracts, recommendations, and product behavior.
+
 ## 1.0.0-rc1 — local release candidate
 
 - Finalized the adaptive `$decision-analysis` Skill and friendly confirmation wording.

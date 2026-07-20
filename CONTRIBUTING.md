@@ -2,6 +2,8 @@
 
 Decision Architect is currently a local release candidate.
 
+Deterministic generated artifacts use canonical LF line endings so byte-level reproduction works consistently across Windows, macOS, and Linux checkouts. Keep the root `.gitattributes` policy active when editing release files.
+
 Before changing code:
 
 1. Read `AGENTS.md`, `PROJECT_SPEC.md`, and the relevant schema.

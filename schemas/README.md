@@ -19,6 +19,6 @@ Phase 6 does not change either JSON contract. The report generator consumes and 
 
 Phase 7 also leaves both mathematical contracts unchanged. Versioned interview state is an internal local session record; only `confirmed-model.json` crosses into decision-model-v1. Project/Skill version `0.6.0` therefore does not alter historical model or result values.
 
-Release `1.0.0-rc1` freezes both contracts at `1.0`. The mathematical engine remains accurately recorded as `0.4.0` in result artifacts, while the current report generator and overall release are `1.0.0-rc1`. Presentation and documentation changes do not rewrite demonstrated numerical values.
+Release `1.0.0-rc2` preserves both contracts at `1.0`. The mathematical engine remains accurately recorded as `0.4.0` in result artifacts, while the current report generator and overall release are `1.0.0-rc2`. Cross-platform newline reproducibility changes do not rewrite demonstrated numerical values.
 
 To accommodate ordinary floating-point representation without changing user data, the validator accepts a weight sum within an absolute tolerance of `1e-9` from 1. It never renormalizes or rewrites the submitted weights.

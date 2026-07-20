@@ -29,6 +29,7 @@ from decision_architect.reporting import (
     load_validated_result,
     render_report,
 )
+from decision_architect.result_serialization import write_result_json
 from decision_architect.validation import validate_model_or_raise
 
 
@@ -344,13 +345,46 @@ class ReportFileAndCliTests(unittest.TestCase):
             self.assertFalse(output.exists())
             self.assertIn("safely validated", stderr.getvalue())
 
-    def test_source_json_line_endings_are_preserved_for_raw_audit(self) -> None:
+    def test_source_json_line_endings_are_canonicalized_for_raw_audit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             source = Path(temporary_directory) / "result.json"
             crlf_text = JOB_RESULT.read_text(encoding="utf-8").replace("\n", "\r\n")
             source.write_bytes(crlf_text.encode("utf-8"))
             _, loaded_source = load_validated_result(source)
-            self.assertEqual(loaded_source.encode("utf-8"), source.read_bytes())
+            self.assertNotIn("\r", loaded_source)
+            self.assertEqual(loaded_source, JOB_RESULT.read_text(encoding="utf-8"))
+
+    def test_crlf_source_cannot_change_generated_report_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            lf_source = root / "lf.json"
+            crlf_source = root / "crlf.json"
+            source_text = JOB_RESULT.read_text(encoding="utf-8")
+            lf_source.write_bytes(source_text.encode("utf-8"))
+            crlf_source.write_bytes(source_text.replace("\n", "\r\n").encode("utf-8"))
+            lf_report = root / "lf.html"
+            crlf_report = root / "crlf.html"
+            generate_report(lf_source, lf_report)
+            generate_report(crlf_source, crlf_report)
+            self.assertEqual(lf_report.read_bytes(), crlf_report.read_bytes())
+
+    def test_generated_reports_use_lf_and_one_final_newline(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output = Path(temporary_directory) / "report.html"
+            generate_report(JOB_RESULT, output)
+            content = output.read_bytes()
+            self.assertNotIn(b"\r", content)
+            self.assertTrue(content.endswith(b"\n"))
+            self.assertFalse(content.endswith(b"\n\n"))
+
+    def test_result_writer_uses_lf_and_one_final_newline(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output = Path(temporary_directory) / "result.json"
+            write_result_json(load_json(JOB_RESULT), output)
+            content = output.read_bytes()
+            self.assertNotIn(b"\r", content)
+            self.assertTrue(content.endswith(b"\n"))
+            self.assertFalse(content.endswith(b"\n\n"))
 
     def test_invalid_input_leaves_no_partial_output(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -441,6 +475,23 @@ class ReportFileAndCliTests(unittest.TestCase):
             first_index = generate_demo_index(first_directory, OUTPUTS)
             second_index = generate_demo_index(second_directory, OUTPUTS)
             self.assertEqual(first_index.read_bytes(), second_index.read_bytes())
+
+    def test_committed_and_regenerated_reports_are_byte_identical(self) -> None:
+        report_names = {
+            JOB_RESULT: "job-choice-report.html",
+            LONG_RESULT: "feynman-restaurant-report.html",
+            SHORT_RESULT: "feynman-restaurant-short-horizon-report.html",
+            UNIVERSITY_RESULT: "university-transfer-report.html",
+        }
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            for result_path, report_name in report_names.items():
+                with self.subTest(result=result_path.name):
+                    generated = Path(temporary_directory) / report_name
+                    generate_report(result_path, generated)
+                    self.assertEqual(
+                        generated.read_bytes(),
+                        (PROJECT_ROOT / "reports" / report_name).read_bytes(),
+                    )
 
     def test_existing_analyze_output_remains_byte_identical(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

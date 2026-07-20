@@ -84,4 +84,4 @@ Generate a report only from an already-saved, validated result-v1 JSON document.
 
 Use `--open` only when the user wants the completed file opened in the default browser. For the four release reports, generate the local index after all four reports with `python -m decision_architect report-index reports --results-dir outputs`.
 
-Release `1.0.0-rc1` keeps the model and result contracts at `1.0` and the mathematical engine at `0.4.0`. The Skill must create proposed JSON with `confirmed_by_user: false`; only the confirmation-gated session helper may create the final model with that field true. Reports are presentation-only. Correlation-aware sampling, Bayesian networks, and influence diagrams are not implemented.
+Release `1.0.0-rc2` keeps the model and result contracts at `1.0` and the mathematical engine at `0.4.0`. The Skill must create proposed JSON with `confirmed_by_user: false`; only the confirmation-gated session helper may create the final model with that field true. Reports are presentation-only. Correlation-aware sampling, Bayesian networks, and influence diagrams are not implemented.

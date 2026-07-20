@@ -16,7 +16,7 @@ CONDITIONALITY_STATEMENT = (
     "This is a conditional recommendation based on the user’s stated preferences, "
     "estimates, constraints, and assumptions—not an objectively correct life decision."
 )
-REPORT_GENERATOR_VERSION = "1.0.0-rc1"
+REPORT_GENERATOR_VERSION = "1.0.0-rc2"
 
 
 BASE_STYLES = r"""

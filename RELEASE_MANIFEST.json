@@ -1,5 +1,5 @@
 {
-  "release_version": "1.0.0-rc1",
+  "release_version": "1.0.0-rc2",
   "files": [
     ".agents/skills/decision-analysis/SKILL.md",
     ".agents/skills/decision-analysis/agents/openai.yaml",
@@ -12,6 +12,7 @@
     ".agents/skills/decision-analysis/references/preference-elicitation.md",
     ".agents/skills/decision-analysis/references/safety-and-limitations.md",
     ".agents/skills/decision-analysis/references/sequential-interview.md",
+    ".gitattributes",
     ".gitignore",
     "AGENTS.md",
     "ARCHITECTURE.md",
@@ -45,6 +46,7 @@
     "decision_architect/session_state.py",
     "decision_architect/statistics.py",
     "decision_architect/svg_charts.py",
+    "decision_architect/text_io.py",
     "decision_architect/validation.py",
     "demo_sessions/feynman-restaurant-2-visits-demo/confirmed-model.json",
     "demo_sessions/feynman-restaurant-2-visits-demo/proposed-model.json",

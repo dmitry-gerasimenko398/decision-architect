@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -15,6 +14,7 @@ from .report_templates import (
     render_sequential_report,
 )
 from .result_serialization import validate_result
+from .text_io import atomic_write_utf8_lf, canonical_lf_text
 
 
 class ReportError(ValueError):
@@ -61,10 +61,10 @@ def _parse_and_validate(source_text: str, source_label: str) -> dict[str, Any]:
 
 
 def load_validated_result(path: str | Path) -> tuple[dict[str, Any], str]:
-    """Read a UTF-8 result file and return its validated object and exact source text."""
+    """Read a UTF-8 result and return its object plus canonical audit text."""
 
     source = Path(path)
-    source_text = source.read_bytes().decode("utf-8")
+    source_text = canonical_lf_text(source.read_bytes().decode("utf-8"))
     return _parse_and_validate(source_text, str(source)), source_text
 
 
@@ -89,30 +89,6 @@ def render_report(result: Mapping[str, Any], source_json: str | None = None) -> 
     raise ReportError(f"Unsupported result model_type: {model_type!r}")
 
 
-def _atomic_write_text(path: Path, content: str) -> Path:
-    """Write through a sibling temporary file so failures never leave partial output."""
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    file_descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.",
-        suffix=".tmp",
-        dir=path.parent,
-    )
-    temporary_path = Path(temporary_name)
-    try:
-        with os.fdopen(file_descriptor, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(content)
-        os.replace(temporary_path, path)
-    except BaseException:
-        try:
-            os.close(file_descriptor)
-        except OSError:
-            pass
-        temporary_path.unlink(missing_ok=True)
-        raise
-    return path
-
-
 def generate_report(result_path: str | Path, output_path: str | Path) -> tuple[Path, dict[str, Any]]:
     """Validate an existing result file, render it, and atomically save one HTML file."""
 
@@ -124,7 +100,7 @@ def generate_report(result_path: str | Path, output_path: str | Path) -> tuple[P
         raise ReportError("The report output path must differ from the source result JSON path.")
     result, source_text = load_validated_result(source)
     html_text = render_report(result, source_text)
-    output = _atomic_write_text(output, html_text)
+    output = atomic_write_utf8_lf(output, html_text)
     return output, result
 
 
@@ -180,4 +156,4 @@ def generate_demo_index(
     for result_filename, report_filename in DEMO_FILES:
         result, _ = load_validated_result(results_dir / result_filename)
         entries.append(_demo_entry(result, report_filename))
-    return _atomic_write_text(report_dir / "index.html", render_demo_index(entries))
+    return atomic_write_utf8_lf(report_dir / "index.html", render_demo_index(entries))

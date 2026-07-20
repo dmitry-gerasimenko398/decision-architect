@@ -16,6 +16,7 @@ from decision_architect.release_verification import (
     RESULT_VERSION,
     ReleaseVerificationError,
     _documentation_check,
+    _line_ending_policy_check,
     _placeholder_check,
     _privacy_check,
     _report_security_check,
@@ -37,7 +38,7 @@ class ReleaseVerificationTests(unittest.TestCase):
         cls.report = verify_release(PROJECT_ROOT, run_tests=False)
 
     def clean_copy(self, parent: str) -> Path:
-        destination = Path(parent) / "decision-architect-1.0.0-rc1"
+        destination = Path(parent) / "decision-architect-1.0.0-rc2"
         return create_clean_copy(PROJECT_ROOT, destination)
 
     def test_core_release_verification_passes(self) -> None:
@@ -55,6 +56,16 @@ class ReleaseVerificationTests(unittest.TestCase):
     def test_manifest_excludes_working_sessions(self) -> None:
         files = load_release_manifest(PROJECT_ROOT)
         self.assertFalse(any(path == "sessions" or path.startswith("sessions/") for path in files))
+
+    def test_gitattributes_enforces_release_text_as_lf(self) -> None:
+        detail = _line_ending_policy_check(PROJECT_ROOT)
+        self.assertIn("17 LF patterns enforced", detail)
+        attributes = (PROJECT_ROOT / ".gitattributes").read_text(encoding="utf-8")
+        for pattern in ("*.py", "*.md", "*.json", "*.html", "*.yaml", "*.ps1", "*.sh"):
+            self.assertIn(f"{pattern} text eol=lf", attributes)
+
+    def test_release_text_contains_no_carriage_return_bytes(self) -> None:
+        self.assertIn("release text files canonical", _line_ending_policy_check(PROJECT_ROOT))
 
     def test_manifest_rejects_a_working_session_entry(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -135,16 +146,16 @@ class ReleaseVerificationTests(unittest.TestCase):
                 _report_security_check(clean)
 
     def test_release_and_component_versions_are_intentionally_distinct(self) -> None:
-        self.assertEqual(RELEASE_VERSION, "1.0.0-rc1")
-        self.assertEqual(REPORT_VERSION, "1.0.0-rc1")
+        self.assertEqual(RELEASE_VERSION, "1.0.0-rc2")
+        self.assertEqual(REPORT_VERSION, "1.0.0-rc2")
         self.assertEqual((MODEL_VERSION, RESULT_VERSION, ENGINE_VERSION), ("1.0", "1.0", "0.4.0"))
-        self.assertIn("release 1.0.0-rc1", _version_check(PROJECT_ROOT))
+        self.assertIn("release 1.0.0-rc2", _version_check(PROJECT_ROOT))
 
     def test_inconsistent_package_version_is_detected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             clean = self.clean_copy(temporary)
             init = clean / "decision_architect" / "__init__.py"
-            init.write_text(init.read_text(encoding="utf-8").replace("1.0.0-rc1", "9.9.9"), encoding="utf-8")
+            init.write_text(init.read_text(encoding="utf-8").replace("1.0.0-rc2", "9.9.9"), encoding="utf-8")
             with self.assertRaisesRegex(ReleaseVerificationError, "Package version"):
                 _version_check(clean)
 
@@ -212,6 +223,19 @@ class ReleaseVerificationTests(unittest.TestCase):
         verify_release(PROJECT_ROOT, run_tests=False)
         after = {relative: (PROJECT_ROOT / relative).read_bytes() for relative in files}
         self.assertEqual(before, after)
+
+    def test_verifier_detects_corrupted_expected_report(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            clean = self.clean_copy(temporary)
+            report_path = clean / "reports" / "job-choice-report.html"
+            original = report_path.read_bytes()
+            report_path.write_bytes(original.replace(b"Job Choice", b"Job Cho1ce", 1))
+            report = verify_release(clean, run_tests=False)
+            artifact = next(
+                check for check in report.checks if check.name == "deterministic generated artifacts"
+            )
+            self.assertFalse(artifact.passed)
+            self.assertIn("Regenerated report differs", artifact.detail)
 
 
 if __name__ == "__main__":

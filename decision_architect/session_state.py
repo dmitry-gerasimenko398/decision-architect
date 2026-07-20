@@ -5,8 +5,6 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
-import os
-import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -20,6 +18,7 @@ from .model_draft import (
     model_review_markdown,
 )
 from .validation import validate_model_or_raise
+from .text_io import atomic_write_bytes, atomic_write_utf8_lf
 
 
 SESSION_VERSION = "1.0"
@@ -38,33 +37,13 @@ class SessionError(ValueError):
     """Raised when a session operation cannot be performed safely."""
 
 
-def _atomic_write_bytes(path: Path, content: bytes) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
-    )
-    temporary_path = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as handle:
-            handle.write(content)
-        os.replace(temporary_path, path)
-    except BaseException:
-        try:
-            os.close(descriptor)
-        except OSError:
-            pass
-        temporary_path.unlink(missing_ok=True)
-        raise
-    return path
-
-
 def atomic_write_json(path: str | Path, value: Any) -> Path:
     text = json.dumps(value, ensure_ascii=False, indent=2) + "\n"
-    return _atomic_write_bytes(Path(path), text.encode("utf-8"))
+    return atomic_write_utf8_lf(path, text)
 
 
 def atomic_write_text(path: str | Path, value: str) -> Path:
-    return _atomic_write_bytes(Path(path), value.encode("utf-8"))
+    return atomic_write_utf8_lf(path, value)
 
 
 def session_slug(value: str) -> str:
@@ -251,7 +230,7 @@ def _restore_file(path: Path, previous: bytes | None) -> None:
     if previous is None:
         path.unlink(missing_ok=True)
     else:
-        _atomic_write_bytes(path, previous)
+        atomic_write_bytes(path, previous)
 
 
 def finalize_session(
