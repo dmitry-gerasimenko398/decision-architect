@@ -1,0 +1,12 @@
+{
+  "$.time_horizon": "user_statement",
+  "$.utility_scale.minimum": "user_statement",
+  "$.utility_scale.maximum": "user_statement",
+  "$.utility_scale.description": "user_statement",
+  "$.state.remaining_opportunities": "user_statement",
+  "$.state.unseen_options_remaining": "user_statement",
+  "$.state.best_known_value": "user_estimate",
+  "$.new_option_distribution.minimum": "user_estimate",
+  "$.new_option_distribution.most_likely": "user_estimate",
+  "$.new_option_distribution.maximum": "user_estimate"
+}

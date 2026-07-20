@@ -1,0 +1,218 @@
+{
+  "model_version": "1.0",
+  "model_type": "multi_criteria",
+  "decision_id": "university-faculty-transfer",
+  "title": "Choose whether and when to transfer university faculty",
+  "description": "Compare staying in the current faculty, transferring now, or postponing for one semester before choosing, under the user's stated preferences and near-home requirement.",
+  "time_horizon": "The rest of the user's studies and the first three years after graduation",
+  "confirmed_by_user": true,
+  "assumptions": [
+    "The postpone alternative is an approximate strategy over the full comparison horizon: remain in the current faculty for one semester, gather information, and then choose between staying and transferring. This multi-criteria model does not solve that staged future decision as a full sequential decision process.",
+    "Uncertainty for different criteria is sampled independently. This is an approximation and may not fully reflect real relationships between outcomes.",
+    "Value of additional information and reversibility represents only residual value not already reflected in subject interest, career prospects, graduation time, or compatibility with family responsibilities.",
+    "All three alternatives have been verified not to require relocation, regular overnight stays away from home, or mandatory placements that prevent regular returns home.",
+    "The four subjective criteria use ratings from 0 (worst meaningful outcome) to 10 (best meaningful outcome).",
+    "Time until graduation is measured in semesters, with 7 semesters as the worst meaningful anchor and 4 semesters as the best meaningful anchor.",
+    "One-at-a-time weight sensitivity preserves the relative proportions of other weights and does not model simultaneous changes to several preference weights."
+  ],
+  "notes": "This is decision support, not an objectively correct life decision. Any result is conditional on the recorded preferences, estimates, constraints, horizon, and assumptions.",
+  "criteria": [
+    {
+      "id": "family_compatibility",
+      "name": "Compatibility with family responsibilities",
+      "description": "Ability to adjust the schedule and plan family support in advance, without counting schedule flexibility and workload predictability twice.",
+      "weight": 0.3,
+      "preference_direction": "maximize",
+      "worst_anchor": 0,
+      "best_anchor": 10,
+      "unit": "rating from 0 to 10"
+    },
+    {
+      "id": "subject_interest",
+      "name": "Subject interest",
+      "description": "Expected personal interest and engagement in the subject over the comparison horizon.",
+      "weight": 0.25,
+      "preference_direction": "maximize",
+      "worst_anchor": 0,
+      "best_anchor": 10,
+      "unit": "rating from 0 to 10"
+    },
+    {
+      "id": "career_prospects",
+      "name": "Career prospects",
+      "description": "Expected career prospects during the first three years after graduation.",
+      "weight": 0.2,
+      "preference_direction": "maximize",
+      "worst_anchor": 0,
+      "best_anchor": 10,
+      "unit": "rating from 0 to 10"
+    },
+    {
+      "id": "time_to_graduation",
+      "name": "Time until graduation",
+      "description": "Expected number of semesters remaining until graduation.",
+      "weight": 0.15,
+      "preference_direction": "minimize",
+      "worst_anchor": 7,
+      "best_anchor": 4,
+      "unit": "semesters"
+    },
+    {
+      "id": "information_reversibility",
+      "name": "Value of additional information and reversibility",
+      "description": "Residual benefit of reducing uncertainty, preserving the ability to choose later, and avoiding or reducing reversal costs, excluding effects already represented by other criteria.",
+      "weight": 0.1,
+      "preference_direction": "maximize",
+      "worst_anchor": 0,
+      "best_anchor": 10,
+      "unit": "rating from 0 to 10"
+    },
+    {
+      "id": "near_home_compatibility",
+      "name": "Near-home compatibility",
+      "description": "Whether the option avoids relocation, regular overnight stays away from home, and mandatory placements that prevent regular returns home.",
+      "weight": 0,
+      "preference_direction": "maximize",
+      "worst_anchor": 0,
+      "best_anchor": 1,
+      "unit": "binary compatibility indicator"
+    }
+  ],
+  "hard_constraints": [
+    {
+      "id": "must_stay_near_home",
+      "name": "Must remain near home",
+      "description": "Eliminate any option that requires relocation, regular overnight stays away from home, or mandatory placements that prevent regular returns home.",
+      "criterion_id": "near_home_compatibility",
+      "operator": ">=",
+      "threshold": 1
+    }
+  ],
+  "alternatives": [
+    {
+      "id": "stay",
+      "name": "Stay in current faculty",
+      "description": "Remain in the current, familiar, and stable faculty through graduation.",
+      "constraint_results": {
+        "must_stay_near_home": true
+      },
+      "criterion_estimates": {
+        "family_compatibility": {
+          "minimum": 7,
+          "most_likely": 8,
+          "maximum": 9
+        },
+        "subject_interest": {
+          "minimum": 2,
+          "most_likely": 3,
+          "maximum": 4
+        },
+        "career_prospects": {
+          "minimum": 4,
+          "most_likely": 5,
+          "maximum": 6
+        },
+        "time_to_graduation": {
+          "minimum": 4,
+          "most_likely": 4,
+          "maximum": 5
+        },
+        "information_reversibility": {
+          "minimum": 2,
+          "most_likely": 3,
+          "maximum": 4
+        },
+        "near_home_compatibility": {
+          "minimum": 1,
+          "most_likely": 1,
+          "maximum": 1
+        }
+      }
+    },
+    {
+      "id": "transfer_now",
+      "name": "Transfer now",
+      "description": "Transfer now to the more interesting faculty, accepting a likely graduation delay and less predictable workload.",
+      "constraint_results": {
+        "must_stay_near_home": true
+      },
+      "criterion_estimates": {
+        "family_compatibility": {
+          "minimum": 4,
+          "most_likely": 6,
+          "maximum": 8
+        },
+        "subject_interest": {
+          "minimum": 7,
+          "most_likely": 8,
+          "maximum": 9
+        },
+        "career_prospects": {
+          "minimum": 6,
+          "most_likely": 8,
+          "maximum": 9
+        },
+        "time_to_graduation": {
+          "minimum": 5,
+          "most_likely": 5,
+          "maximum": 6
+        },
+        "information_reversibility": {
+          "minimum": 1,
+          "most_likely": 2,
+          "maximum": 3
+        },
+        "near_home_compatibility": {
+          "minimum": 1,
+          "most_likely": 1,
+          "maximum": 1
+        }
+      }
+    },
+    {
+      "id": "postpone",
+      "name": "Postpone for one semester",
+      "description": "Remain in the current faculty for one semester, gather information and possibly take an introductory course, then choose between staying and transferring.",
+      "constraint_results": {
+        "must_stay_near_home": true
+      },
+      "criterion_estimates": {
+        "family_compatibility": {
+          "minimum": 7,
+          "most_likely": 9,
+          "maximum": 10
+        },
+        "subject_interest": {
+          "minimum": 4,
+          "most_likely": 6,
+          "maximum": 8
+        },
+        "career_prospects": {
+          "minimum": 5,
+          "most_likely": 7,
+          "maximum": 9
+        },
+        "time_to_graduation": {
+          "minimum": 5,
+          "most_likely": 6,
+          "maximum": 7
+        },
+        "information_reversibility": {
+          "minimum": 8,
+          "most_likely": 9,
+          "maximum": 10
+        },
+        "near_home_compatibility": {
+          "minimum": 1,
+          "most_likely": 1,
+          "maximum": 1
+        }
+      }
+    }
+  ],
+  "analysis_settings": {
+    "random_seed": 314159,
+    "monte_carlo_samples": 10000,
+    "clamp_utility": true
+  }
+}

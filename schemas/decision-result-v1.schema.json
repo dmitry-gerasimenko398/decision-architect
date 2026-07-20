@@ -1,0 +1,475 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://decision-architect.local/schemas/decision-result-v1.schema.json",
+  "title": "Decision Architect result v1",
+  "description": "The auditable output contract for a completed Decision Architect calculation.",
+  "oneOf": [
+    { "$ref": "#/$defs/multiCriteriaResult" },
+    { "$ref": "#/$defs/sequentialExplorationResult" }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "nullableNumber": { "type": ["number", "null"] },
+    "nullableIdentifier": {
+      "oneOf": [
+        { "$ref": "#/$defs/identifier" },
+        { "type": "null" }
+      ]
+    },
+    "baseResult": {
+      "type": "object",
+      "required": [
+        "result_version",
+        "model_version",
+        "model_type",
+        "decision_id",
+        "engine_version",
+        "status",
+        "assumptions",
+        "warnings"
+      ],
+      "properties": {
+        "result_version": { "const": "1.0" },
+        "model_version": { "const": "1.0" },
+        "model_type": { "enum": ["multi_criteria", "sequential_exploration"] },
+        "decision_id": { "$ref": "#/$defs/identifier" },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "status": { "const": "completed" },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "distributionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum", "standard_deviation", "percentile_10", "percentile_50", "percentile_90"],
+      "properties": {
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "standard_deviation": { "type": "number", "minimum": 0 },
+        "percentile_10": { "type": "number" },
+        "percentile_50": { "type": "number" },
+        "percentile_90": { "type": "number" }
+      }
+    },
+    "clampDiagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterion_id", "analytical_mean_clamped", "sampled_below_zero_count", "sampled_above_one_count"],
+      "properties": {
+        "criterion_id": { "$ref": "#/$defs/identifier" },
+        "analytical_mean_clamped": { "type": "boolean" },
+        "sampled_below_zero_count": { "type": "integer", "minimum": 0 },
+        "sampled_above_one_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "alternativeResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alternative_id",
+        "analytical_raw_means",
+        "analytical_utility",
+        "monte_carlo_mean_utility",
+        "win_probability",
+        "utility_distribution",
+        "clamp_diagnostics",
+        "criterion_mean_utilities",
+        "weighted_criterion_contributions"
+      ],
+      "properties": {
+        "alternative_id": { "$ref": "#/$defs/identifier" },
+        "analytical_raw_means": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/identifier" },
+          "additionalProperties": { "type": "number" }
+        },
+        "analytical_utility": { "type": "number", "minimum": 0, "maximum": 1 },
+        "monte_carlo_mean_utility": { "type": "number", "minimum": 0, "maximum": 1 },
+        "criterion_mean_utilities": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/identifier" },
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "weighted_criterion_contributions": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/identifier" },
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "win_probability": { "type": "number", "minimum": 0, "maximum": 1 },
+        "utility_distribution": { "$ref": "#/$defs/distributionSummary" },
+        "clamp_diagnostics": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/clampDiagnostic" }
+        }
+      }
+    },
+    "constraintFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "constraint_id",
+        "criterion_id",
+        "operator",
+        "threshold",
+        "relevant_estimate_boundary",
+        "human_explanation"
+      ],
+      "properties": {
+        "constraint_id": { "$ref": "#/$defs/identifier" },
+        "criterion_id": { "$ref": "#/$defs/identifier" },
+        "operator": { "enum": ["<=", "<", ">=", ">", "==", "!="] },
+        "threshold": { "type": "number" },
+        "relevant_estimate_boundary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "values"],
+          "properties": {
+            "name": { "enum": ["minimum", "maximum", "all_values"] },
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": { "type": "number" }
+            }
+          }
+        },
+        "human_explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "excludedAlternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alternative_id", "failed_constraints"],
+      "properties": {
+        "alternative_id": { "$ref": "#/$defs/identifier" },
+        "failed_constraints": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/constraintFailure" }
+        }
+      }
+    },
+    "robustWeightInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_weight", "maximum_weight", "minimum_inclusive", "maximum_inclusive"],
+      "properties": {
+        "minimum_weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maximum_weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "minimum_inclusive": { "type": "boolean" },
+        "maximum_inclusive": { "type": "boolean" }
+      }
+    },
+    "winnerSwitch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "direction", "change_type", "threshold_weight", "new_winner_id",
+        "new_tied_winner_ids", "tie_alternative_ids", "mean_utility_at_threshold",
+        "verified", "verification_epsilon", "lower_probe_weight",
+        "lower_probe_leader_ids", "upper_probe_weight", "upper_probe_leader_ids",
+        "explanation"
+      ],
+      "properties": {
+        "direction": { "enum": ["lower", "upper"] },
+        "change_type": { "enum": ["winner_switch", "boundary_tie"] },
+        "threshold_weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "new_winner_id": { "$ref": "#/$defs/nullableIdentifier" },
+        "new_tied_winner_ids": {
+          "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true
+        },
+        "tie_alternative_ids": {
+          "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true
+        },
+        "mean_utility_at_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "verified": { "const": true },
+        "verification_epsilon": { "type": "number", "exclusiveMinimum": 0 },
+        "lower_probe_weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "lower_probe_leader_ids": {
+          "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true
+        },
+        "upper_probe_weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "upper_probe_leader_ids": {
+          "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true
+        },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "criterionSensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterion_id", "baseline_weight", "status", "robust_interval", "lower_switch", "upper_switch", "explanation"],
+      "properties": {
+        "criterion_id": { "$ref": "#/$defs/identifier" },
+        "baseline_weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "status": { "enum": ["analyzed", "not_analyzable_baseline_weight_one", "not_applicable"] },
+        "robust_interval": {
+          "oneOf": [{ "$ref": "#/$defs/robustWeightInterval" }, { "type": "null" }]
+        },
+        "lower_switch": {
+          "oneOf": [{ "$ref": "#/$defs/winnerSwitch" }, { "type": "null" }]
+        },
+        "upper_switch": {
+          "oneOf": [{ "$ref": "#/$defs/winnerSwitch" }, { "type": "null" }]
+        },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "multiCriteriaResult": {
+      "allOf": [
+        { "$ref": "#/$defs/baseResult" },
+        {
+          "type": "object",
+          "required": ["method", "reproducibility", "alternative_results", "excluded_alternatives", "sensitivity", "recommendation"],
+          "properties": {
+            "model_type": { "const": "multi_criteria" },
+            "method": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "recommendation_basis",
+                "analytical_cross_check",
+                "uncertainty_distribution",
+                "tie_handling",
+                "numerical_tolerance",
+                "close_call_threshold",
+                "utility_clamping",
+                "percentile_method",
+                "constraint_interpretation"
+              ],
+              "properties": {
+                "name": { "const": "weighted_utility_with_monte_carlo" },
+                "recommendation_basis": { "const": "monte_carlo_mean_utility" },
+                "analytical_cross_check": { "const": "triangular_raw_mean_weighted_utility" },
+                "uncertainty_distribution": { "const": "triangular" },
+                "tie_handling": { "const": "split_win_credit" },
+                "numerical_tolerance": { "const": 1e-12 },
+                "close_call_threshold": { "const": 0.6 },
+                "utility_clamping": { "const": true },
+                "percentile_method": { "const": "linear_interpolation_index_n_minus_1" },
+                "constraint_interpretation": { "const": "conservative_all_supported_values" }
+              }
+            },
+            "reproducibility": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["random_seed", "monte_carlo_samples", "random_generator"],
+              "properties": {
+                "random_seed": { "type": "integer" },
+                "monte_carlo_samples": { "type": "integer", "minimum": 1 },
+                "random_generator": { "const": "python_random.Random" }
+              }
+            },
+            "alternative_results": {
+              "type": "array",
+              "maxItems": 4,
+              "items": { "$ref": "#/$defs/alternativeResult" }
+            },
+            "excluded_alternatives": {
+              "type": "array",
+              "maxItems": 4,
+              "items": { "$ref": "#/$defs/excludedAlternative" }
+            },
+            "sensitivity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status", "method", "ranking_basis", "random_seed", "simulation_count",
+                "fixed_sample_reused", "numerical_tolerance", "verification_epsilon_rule",
+                "baseline_winner_id", "baseline_tied_alternative_ids", "criteria", "explanation"
+              ],
+              "properties": {
+                "status": {
+                  "enum": ["analyzed", "not_applicable_no_feasible_alternatives", "not_applicable_only_one_feasible_alternative", "not_applicable_baseline_tie"]
+                },
+                "method": { "const": "fixed_sample_linear_weight_sensitivity" },
+                "ranking_basis": { "const": "monte_carlo_mean_utility" },
+                "random_seed": { "type": "integer" },
+                "simulation_count": { "type": "integer", "minimum": 1 },
+                "fixed_sample_reused": { "const": true },
+                "numerical_tolerance": { "const": 1e-12 },
+                "verification_epsilon_rule": { "type": "string", "minLength": 1 },
+                "baseline_winner_id": { "$ref": "#/$defs/nullableIdentifier" },
+                "baseline_tied_alternative_ids": {
+                  "type": "array", "items": { "$ref": "#/$defs/identifier" }, "uniqueItems": true
+                },
+                "criteria": {
+                  "type": "array",
+                  "minItems": 2,
+                  "items": { "$ref": "#/$defs/criterionSensitivity" }
+                },
+                "explanation": { "type": "string", "minLength": 1 }
+              }
+            },
+            "recommendation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "alternative_id",
+                "tied_alternative_ids",
+                "leading_monte_carlo_mean_utility",
+                "leading_win_probability",
+                "conditional_statement"
+              ],
+              "properties": {
+                "status": {
+                  "enum": ["recommended", "close_call", "mean_utility_tie", "only_feasible_alternative", "no_feasible_alternative"]
+                },
+                "alternative_id": { "$ref": "#/$defs/nullableIdentifier" },
+                "tied_alternative_ids": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/identifier" },
+                  "uniqueItems": true
+                },
+                "leading_monte_carlo_mean_utility": { "$ref": "#/$defs/nullableNumber" },
+                "leading_win_probability": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+                "conditional_statement": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "sequentialHorizonPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["remaining_opportunities", "exploit_value", "explore_value", "recommended_action", "action_advantage"],
+      "properties": {
+        "remaining_opportunities": { "type": "integer", "minimum": 1 },
+        "exploit_value": { "type": "number" },
+        "explore_value": { "$ref": "#/$defs/nullableNumber" },
+        "recommended_action": { "enum": ["explore", "exploit", "indifferent"] },
+        "action_advantage": { "$ref": "#/$defs/nullableNumber" }
+      }
+    },
+    "sequentialActionSwitch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["remaining_opportunities", "previous_action", "recommended_action"],
+      "properties": {
+        "remaining_opportunities": { "type": "integer", "minimum": 2 },
+        "previous_action": { "enum": ["explore", "exploit", "indifferent"] },
+        "recommended_action": { "enum": ["explore", "exploit", "indifferent"] }
+      }
+    },
+    "sequentialExplorationResult": {
+      "allOf": [
+        { "$ref": "#/$defs/baseResult" },
+        {
+          "type": "object",
+          "required": [
+            "decision_metadata", "recommended_action", "recommendation_status",
+            "expected_total_utility", "exploit_value", "explore_value",
+            "action_advantage", "conditional_statement", "current_state",
+            "new_option_distribution", "utility_scale", "method", "reproducibility",
+            "policy_by_remaining_opportunities", "action_switch_points"
+          ],
+          "properties": {
+            "model_type": { "const": "sequential_exploration" },
+            "decision_metadata": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["title", "description", "time_horizon"],
+              "properties": {
+                "title": { "type": "string", "minLength": 1 },
+                "description": { "type": "string", "minLength": 1 },
+                "time_horizon": { "type": "string", "minLength": 1 }
+              }
+            },
+            "recommended_action": { "enum": ["explore", "exploit", "indifferent"] },
+            "recommendation_status": {
+              "enum": ["explore_preferred", "exploit_preferred", "indifferent", "exploration_unavailable"]
+            },
+            "expected_total_utility": { "type": "number" },
+            "exploit_value": { "type": "number" },
+            "explore_value": { "$ref": "#/$defs/nullableNumber" },
+            "action_advantage": { "$ref": "#/$defs/nullableNumber" },
+            "conditional_statement": { "type": "string", "minLength": 1 },
+            "current_state": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["remaining_opportunities", "unseen_options_remaining", "best_known_value"],
+              "properties": {
+                "remaining_opportunities": { "type": "integer", "minimum": 1 },
+                "unseen_options_remaining": { "type": "integer", "minimum": 0 },
+                "best_known_value": { "type": "number" }
+              }
+            },
+            "new_option_distribution": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["minimum", "most_likely", "maximum"],
+              "properties": {
+                "minimum": { "type": "number" },
+                "most_likely": { "type": "number" },
+                "maximum": { "type": "number" }
+              }
+            },
+            "utility_scale": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["minimum", "maximum", "unit", "description"],
+              "properties": {
+                "minimum": { "type": "number" },
+                "maximum": { "type": "number" },
+                "unit": { "type": "string", "minLength": 1 },
+                "description": { "type": "string", "minLength": 1 }
+              }
+            },
+            "method": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "expectation_method", "quadrature_points", "action_comparison_tolerance", "memoization_decimal_places", "uncertainty_distribution", "discount_factor"],
+              "properties": {
+                "name": { "const": "finite_horizon_dynamic_programming" },
+                "expectation_method": { "const": "midpoint_quantile_quadrature" },
+                "quadrature_points": { "type": "integer", "minimum": 1 },
+                "action_comparison_tolerance": { "const": 1e-10 },
+                "memoization_decimal_places": { "const": 12 },
+                "uncertainty_distribution": { "const": "triangular" },
+                "discount_factor": { "const": 1 }
+              }
+            },
+            "reproducibility": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["deterministic", "random_sampling", "quadrature_points", "memoization_decimal_places", "memoized_state_count"],
+              "properties": {
+                "deterministic": { "const": true },
+                "random_sampling": { "const": false },
+                "quadrature_points": { "type": "integer", "minimum": 1 },
+                "memoization_decimal_places": { "const": 12 },
+                "memoized_state_count": { "type": "integer", "minimum": 1 }
+              }
+            },
+            "policy_by_remaining_opportunities": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/sequentialHorizonPolicy" }
+            },
+            "action_switch_points": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/sequentialActionSwitch" }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

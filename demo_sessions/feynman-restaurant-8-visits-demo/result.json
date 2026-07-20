@@ -1,0 +1,129 @@
+{
+  "result_version": "1.0",
+  "model_version": "1.0",
+  "model_type": "sequential_exploration",
+  "decision_id": "restaurant-dish-exploration",
+  "engine_version": "0.4.0",
+  "status": "completed",
+  "decision_metadata": {
+    "title": "Try a new dish or order the best-known dish",
+    "description": "Choose whether to order the best-known dish or try one untried dish on each remaining restaurant visit.",
+    "time_horizon": "Exactly 8 remaining restaurant visits, including the next visit"
+  },
+  "recommended_action": "explore",
+  "recommendation_status": "explore_preferred",
+  "expected_total_utility": 57.53818075244744,
+  "exploit_value": 56.25327198359611,
+  "explore_value": 57.53818075244744,
+  "action_advantage": 1.2849087688513308,
+  "conditional_statement": "Under the stated utility scale, triangular estimates, and 8-opportunity horizon, explore is preferable; this is conditional on those inputs and assumptions, not an objectively correct life choice.",
+  "current_state": {
+    "remaining_opportunities": 8,
+    "unseen_options_remaining": 10,
+    "best_known_value": 6.5
+  },
+  "new_option_distribution": {
+    "minimum": 2.0,
+    "most_likely": 6.0,
+    "maximum": 10.0
+  },
+  "utility_scale": {
+    "minimum": 0.0,
+    "maximum": 10.0,
+    "unit": "net rating points",
+    "description": "0 means the worst meaningful dining experience; 10 means the best realistically imaginable dining experience."
+  },
+  "method": {
+    "name": "finite_horizon_dynamic_programming",
+    "expectation_method": "midpoint_quantile_quadrature",
+    "quadrature_points": 101,
+    "action_comparison_tolerance": 1e-10,
+    "memoization_decimal_places": 12,
+    "uncertainty_distribution": "triangular",
+    "discount_factor": 1
+  },
+  "assumptions": [
+    "Ratings are net utility, so there is no separate penalty for experimenting.",
+    "Each action consumes exactly one remaining visit.",
+    "A newly tried dish's rating is received immediately on that visit and remains known for later visits.",
+    "The reusable best-known rating updates to the maximum of its old value and the newly observed rating.",
+    "There is no discounting of later visits.",
+    "Each untried dish is an independent draw from one fixed triangular rating distribution.",
+    "Observing one dish does not update the rating distribution of the remaining untried dishes."
+  ],
+  "warnings": [
+    "Continuous expectations use deterministic midpoint quantile quadrature, so values are numerical approximations."
+  ],
+  "reproducibility": {
+    "deterministic": true,
+    "random_sampling": false,
+    "quadrature_points": 101,
+    "memoization_decimal_places": 12,
+    "memoized_state_count": 1449
+  },
+  "policy_by_remaining_opportunities": [
+    {
+      "remaining_opportunities": 1,
+      "exploit_value": 6.5,
+      "explore_value": 6.0,
+      "recommended_action": "exploit",
+      "action_advantage": -0.5
+    },
+    {
+      "remaining_opportunities": 2,
+      "exploit_value": 13.0,
+      "explore_value": 12.946268589889446,
+      "recommended_action": "exploit",
+      "action_advantage": -0.05373141011055438
+    },
+    {
+      "remaining_opportunities": 3,
+      "exploit_value": 19.5,
+      "explore_value": 19.89253717977889,
+      "recommended_action": "explore",
+      "action_advantage": 0.39253717977889124
+    },
+    {
+      "remaining_opportunities": 4,
+      "exploit_value": 26.39253717977889,
+      "explore_value": 27.09061096474947,
+      "recommended_action": "explore",
+      "action_advantage": 0.6980737849705783
+    },
+    {
+      "remaining_opportunities": 5,
+      "exploit_value": 33.59061096474947,
+      "explore_value": 34.50030250077533,
+      "recommended_action": "explore",
+      "action_advantage": 0.9096915360258535
+    },
+    {
+      "remaining_opportunities": 6,
+      "exploit_value": 41.00030250077533,
+      "explore_value": 42.0661591378125,
+      "recommended_action": "explore",
+      "action_advantage": 1.0658566370371716
+    },
+    {
+      "remaining_opportunities": 7,
+      "exploit_value": 48.5661591378125,
+      "explore_value": 49.75327198359611,
+      "recommended_action": "explore",
+      "action_advantage": 1.1871128457836093
+    },
+    {
+      "remaining_opportunities": 8,
+      "exploit_value": 56.25327198359611,
+      "explore_value": 57.53818075244744,
+      "recommended_action": "explore",
+      "action_advantage": 1.2849087688513308
+    }
+  ],
+  "action_switch_points": [
+    {
+      "remaining_opportunities": 3,
+      "previous_action": "exploit",
+      "recommended_action": "explore"
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://decision-architect.local/schemas/decision-model-v1.schema.json",
+  "title": "Decision Architect model v1",
+  "description": "A user-confirmed input model for one of the two Decision Architect MVP model types.",
+  "oneOf": [
+    { "$ref": "#/$defs/multiCriteriaModel" },
+    { "$ref": "#/$defs/sequentialExplorationModel" }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "triangularDistribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "most_likely", "maximum"],
+      "properties": {
+        "minimum": { "type": "number" },
+        "most_likely": { "type": "number" },
+        "maximum": { "type": "number" }
+      },
+      "description": "Runtime validation enforces minimum <= most_likely <= maximum. Equal values represent certainty."
+    },
+    "baseModel": {
+      "type": "object",
+      "required": [
+        "model_version",
+        "model_type",
+        "decision_id",
+        "title",
+        "description",
+        "time_horizon",
+        "confirmed_by_user",
+        "assumptions"
+      ],
+      "properties": {
+        "model_version": { "const": "1.0" },
+        "model_type": {
+          "enum": ["multi_criteria", "sequential_exploration"]
+        },
+        "decision_id": { "$ref": "#/$defs/identifier" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "time_horizon": { "type": "string", "minLength": 1 },
+        "confirmed_by_user": { "const": true },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "description",
+        "weight",
+        "preference_direction",
+        "worst_anchor",
+        "best_anchor",
+        "unit"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "preference_direction": { "enum": ["maximize", "minimize"] },
+        "worst_anchor": { "type": "number" },
+        "best_anchor": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1 }
+      },
+      "description": "Anchors are user-confirmed and distinct. Runtime validation checks anchor order against preference_direction."
+    },
+    "hardConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "description", "criterion_id", "operator", "threshold"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "criterion_id": { "$ref": "#/$defs/identifier" },
+        "operator": { "enum": ["<=", "<", ">=", ">", "==", "!="] },
+        "threshold": { "type": "number" }
+      },
+      "description": "The engine evaluates this rule conservatively against the full triangular support and checks it against each alternative's confirmed constraint result."
+    },
+    "alternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "description", "constraint_results", "criterion_estimates"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "constraint_results": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/identifier" },
+          "additionalProperties": { "type": "boolean" }
+        },
+        "criterion_estimates": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "$ref": "#/$defs/identifier" },
+          "additionalProperties": { "$ref": "#/$defs/triangularDistribution" }
+        }
+      },
+      "description": "Runtime validation requires exactly one estimate per criterion and one result per hard constraint."
+    },
+    "multiCriteriaModel": {
+      "allOf": [
+        { "$ref": "#/$defs/baseModel" },
+        {
+          "type": "object",
+          "required": ["criteria", "hard_constraints", "alternatives", "analysis_settings"],
+          "properties": {
+            "model_type": { "const": "multi_criteria" },
+            "criteria": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "$ref": "#/$defs/criterion" }
+            },
+            "hard_constraints": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/hardConstraint" }
+            },
+            "alternatives": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 4,
+              "items": { "$ref": "#/$defs/alternative" }
+            },
+            "analysis_settings": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["random_seed", "monte_carlo_samples", "clamp_utility"],
+              "properties": {
+                "random_seed": { "type": "integer" },
+                "monte_carlo_samples": { "type": "integer", "minimum": 1 },
+                "clamp_utility": { "const": true }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "utilityScale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum", "unit", "description"],
+      "properties": {
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 }
+      },
+      "description": "Runtime validation requires minimum < maximum."
+    },
+    "sequentialState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["remaining_opportunities", "unseen_options_remaining", "best_known_value"],
+      "properties": {
+        "remaining_opportunities": { "type": "integer", "minimum": 1 },
+        "unseen_options_remaining": { "type": "integer", "minimum": 0 },
+        "best_known_value": { "type": "number" }
+      }
+    },
+    "sequentialAnalysisSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quadrature_points"],
+      "properties": {
+        "quadrature_points": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Must be odd. Runtime validation enforces this; omit analysis_settings to use 101."
+        }
+      }
+    },
+    "sequentialExplorationModel": {
+      "allOf": [
+        { "$ref": "#/$defs/baseModel" },
+        {
+          "type": "object",
+          "required": ["utility_scale", "state", "new_option_distribution"],
+          "properties": {
+            "model_type": { "const": "sequential_exploration" },
+            "utility_scale": { "$ref": "#/$defs/utilityScale" },
+            "state": { "$ref": "#/$defs/sequentialState" },
+            "new_option_distribution": { "$ref": "#/$defs/triangularDistribution" },
+            "analysis_settings": { "$ref": "#/$defs/sequentialAnalysisSettings" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

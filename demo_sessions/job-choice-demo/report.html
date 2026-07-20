@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Choice · Decision Architect</title>
+<style>
+
+:root {
+  color-scheme: light;
+  --ink: #172033;
+  --muted: #526079;
+  --line: #d8deea;
+  --paper: #ffffff;
+  --wash: #f4f6fa;
+  --brand: #143c7d;
+  --brand-2: #0b6b67;
+  --accent: #d97706;
+  --danger: #a72c37;
+  --radius: 16px;
+  --shadow: 0 12px 34px rgba(23, 32, 51, 0.09);
+}
+* { box-sizing: border-box; }
+html { background: #e9edf4; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: linear-gradient(180deg, #e8eef9 0, #f6f7fa 380px, #f6f7fa 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+a { color: var(--brand); text-underline-offset: 3px; }
+.page { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 60px; }
+.product-header {
+  display: flex; justify-content: space-between; gap: 24px; align-items: flex-start;
+  color: #fff; background: #102d5c; border-radius: 20px; padding: 28px 32px;
+  box-shadow: var(--shadow); border-top: 5px solid #38a69d;
+}
+.eyebrow { margin: 0 0 4px; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.product-header h1 { margin: 0; font-size: clamp(1.65rem, 4vw, 2.6rem); line-height: 1.1; }
+.product-header p { margin: 10px 0 0; color: #dce8ff; max-width: 760px; }
+.version-stack { min-width: 172px; margin: 0; font-size: .86rem; }
+.version-stack div { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px solid #ffffff35; padding: 4px 0; }
+.version-stack dt { color: #bcd0f1; }
+.version-stack dd { margin: 0; font-weight: 700; }
+.conditionality {
+  margin: 18px 0 0; padding: 15px 18px; border: 2px solid #8b5a04; border-radius: 12px;
+  background: #fff8e7; color: #563600; font-weight: 700;
+}
+main section { margin-top: 24px; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: 0 5px 16px rgba(23,32,51,.045); }
+.recommendation { border-left: 7px solid var(--brand-2); padding: 28px; }
+.recommendation.tie, .recommendation.close { border-left-color: var(--accent); }
+.recommendation.infeasible { border-left-color: var(--danger); }
+.section-kicker { color: var(--brand-2); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: .76rem; margin: 0 0 4px; }
+h2 { margin: 0 0 14px; font-size: 1.45rem; line-height: 1.2; }
+h3 { margin: 24px 0 10px; font-size: 1.08rem; }
+p { margin: 8px 0 14px; }
+.lede { font-size: 1.08rem; color: #34415a; max-width: 880px; }
+.status { display: inline-block; margin-bottom: 12px; padding: 5px 10px; border-radius: 999px; background: #e2f3ef; color: #075b56; font-size: .78rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.status.caution { background: #fff0cf; color: #774800; }
+.status.danger { background: #fde8ea; color: #84212c; }
+.hero-action { margin: 2px 0 8px; font-size: clamp(1.7rem, 4vw, 2.65rem); line-height: 1.05; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin: 20px 0 0; }
+.metric { padding: 14px 16px; border-radius: 12px; background: var(--wash); border: 1px solid #e2e6ee; }
+.metric span { display: block; color: var(--muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.metric strong { display: block; margin-top: 3px; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+caption { text-align: left; padding: 11px 13px; color: var(--muted); font-size: .88rem; font-weight: 700; }
+th, td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+th { background: #eef2f8; color: #25324a; font-size: .8rem; letter-spacing: .025em; }
+tbody tr:last-child td { border-bottom: 0; }
+tr.current-row { outline: 3px solid #143c7d; outline-offset: -3px; background: #edf4ff; }
+.numeric { text-align: right; white-space: nowrap; }
+.id { color: var(--muted); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .84em; }
+.chart { display: block; width: 100%; height: auto; margin: 14px 0; background: #fbfcfe; border: 1px solid var(--line); border-radius: 12px; }
+.compact-chart { max-height: 380px; }
+.grid-line { stroke: #dfe4ec; stroke-width: 1; }
+.range-line { stroke: #143c7d; stroke-width: 8; stroke-linecap: round; }
+.range-cap { stroke: #143c7d; stroke-width: 2; }
+.mean-marker { fill: #b74713; stroke: #fff; stroke-width: 2; }
+.median-marker { fill: #0b6b67; stroke: #fff; stroke-width: 2; }
+.svg-label, .svg-tick, .svg-value, .svg-heading, .svg-region-label { font-family: ui-sans-serif, system-ui, sans-serif; fill: #24324a; }
+.svg-label { font-size: 13px; font-weight: 700; }
+.svg-tick { font-size: 12px; }
+.svg-value { font-size: 12px; font-weight: 800; }
+.svg-heading { font-size: 14px; font-weight: 800; }
+.svg-region-label { font-size: 12px; font-weight: 800; }
+.bar-track { fill: #e7ebf2; }
+.contribution-bar { fill: #287f79; }
+.explore-region { fill: #e4f3ef; }
+.exploit-region { fill: #fff1dc; }
+.zero-line { stroke: #29364d; stroke-width: 2; stroke-dasharray: 7 5; }
+.policy-line { fill: none; stroke: #143c7d; stroke-width: 3; }
+.policy-point { fill: #143c7d; stroke: #fff; stroke-width: 2; }
+.current-point { fill: #d05c16; stroke: #172033; stroke-width: 2; }
+.note { border-left: 4px solid var(--accent); background: #fff8e8; padding: 12px 15px; }
+.distinction { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+.distinction > div { padding: 14px; background: var(--wash); border-radius: 10px; }
+.interval { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-weight: 800; }
+.clean-list { margin: 8px 0; padding-left: 22px; }
+.clean-list li { margin: 6px 0; }
+.empty-state { color: var(--muted); font-style: italic; }
+details { margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+summary { cursor: pointer; padding: 14px 16px; font-weight: 800; color: var(--brand); }
+details[open] summary { border-bottom: 1px solid var(--line); }
+.details-body { padding: 16px; }
+.formula { overflow-x: auto; padding: 12px 14px; border-radius: 8px; background: #182238; color: #f5f7fb; font: .91rem/1.6 ui-monospace, "Cascadia Mono", Consolas, monospace; white-space: pre-wrap; }
+.raw-json { max-height: 580px; overflow: auto; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-footer { color: var(--muted); text-align: center; font-size: .85rem; margin-top: 26px; }
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.demo-card { display: block; color: inherit; text-decoration: none; padding: 22px; border-radius: 14px; border: 1px solid var(--line); background: #fff; box-shadow: 0 4px 14px rgba(23,32,51,.05); }
+.demo-card:hover, .demo-card:focus-visible { outline: 3px solid #2e69ba; outline-offset: 3px; transform: translateY(-2px); }
+.demo-card strong { color: var(--brand); font-size: 1.14rem; }
+.demo-card span { display: block; color: var(--muted); margin-top: 8px; }
+@media (max-width: 760px) {
+  .page { width: min(100% - 20px, 1180px); padding-top: 10px; }
+  .product-header { display: block; padding: 22px; }
+  .version-stack { margin-top: 20px; }
+  .two-column, .distinction { grid-template-columns: 1fr; }
+  .panel { padding: 18px; }
+  th, td { padding: 8px; }
+}
+@media print {
+  @page { margin: 14mm; }
+  html, body { background: #fff; }
+  body { font-size: 10.5pt; color: #000; }
+  .page { width: 100%; margin: 0; padding: 0; }
+  .product-header { color: #000; background: #fff; border: 2px solid #000; box-shadow: none; }
+  .product-header p, .version-stack dt { color: #222; }
+  .panel, details, .chart { box-shadow: none; break-inside: avoid; }
+  section, table, .metric { break-inside: avoid; }
+  details > .details-body { display: block; }
+  .raw-json { max-height: none; }
+  a { color: #000; text-decoration: none; }
+}
+
+</style>
+</head>
+<body>
+<div class="page"><header class="product-header"><div><p class="eyebrow">Decision Architect</p><h1>Job Choice</h1><p>Multi-criteria decision model · Decision ID <span class="id">job-choice-example</span></p></div><dl class="version-stack"><div><dt>Model</dt><dd>1.0</dd></div><div><dt>Result</dt><dd>1.0</dd></div><div><dt>Engine</dt><dd>0.4.0</dd></div><div><dt>Report</dt><dd>1.0.0-rc1</dd></div></dl></header><p class="conditionality">This is a conditional recommendation based on the user’s stated preferences, estimates, constraints, and assumptions—not an objectively correct life decision.</p><main><section class="panel recommendation" aria-labelledby="recommendation-heading"><p class="section-kicker">Result</p><span class="status">Recommended under this model</span><h2 class="hero-action" id="recommendation-heading">Remote Startup</h2><p class="lede">Under the confirmed preferences, estimates, constraints, time horizon, and assumptions, Remote startup has the unique highest Monte Carlo mean utility and wins 98.8% of simulated scenarios.</p><p class="note"><strong>What win probability means:</strong> the percentage of modeled Monte Carlo scenarios in which an alternative ranked first. It is not the probability that the real-life decision will succeed, and it is not objective truth.</p><div class="metrics"><div class="metric"><span>Monte Carlo mean utility</span><strong>0.6635</strong></div><div class="metric"><span>Win probability</span><strong>98.8%</strong></div></div></section><section class="panel" aria-labelledby="alternatives-heading"><p class="section-kicker">Why</p><h2 id="alternatives-heading">Alternatives overview</h2><div class="table-wrap"><table><caption>Feasible alternatives and their stored utility summaries</caption><thead><tr><th scope="col">Alternative</th><th scope="col" class="numeric">MC mean</th><th scope="col" class="numeric">Analytical</th><th scope="col" class="numeric">Win probability</th><th scope="col" class="numeric">P10</th><th scope="col" class="numeric">P50</th><th scope="col" class="numeric">P90</th><th scope="col" class="numeric">Std. dev.</th></tr></thead><tbody><tr><th scope="row">Remote Startup<br><span class="id">remote-startup</span></th><td class="numeric">0.6635</td><td class="numeric">0.6636</td><td class="numeric">98.8%</td><td class="numeric">0.5929</td><td class="numeric">0.6619</td><td class="numeric">0.7369</td><td class="numeric">0.0555</td></tr><tr><th scope="row">Stable Corp<br><span class="id">stable-corp</span></th><td class="numeric">0.5304</td><td class="numeric">0.5306</td><td class="numeric">1.2%</td><td class="numeric">0.4913</td><td class="numeric">0.5295</td><td class="numeric">0.5712</td><td class="numeric">0.0309</td></tr></tbody></table></div><h3>Uncertainty at the current weights</h3><p>Ranges show the stored Monte Carlo distribution. They describe estimate uncertainty at the current preferences.</p><svg class="chart" viewBox="0 0 760 214" role="img" aria-labelledby="uncertainty-chart-title uncertainty-chart-desc"><title id="uncertainty-chart-title">Utility uncertainty by feasible alternative</title><desc id="uncertainty-chart-desc">Remote Startup: P10 0.593, median 0.662, mean 0.664, P90 0.737. Stable Corp: P10 0.491, median 0.529, mean 0.530, P90 0.571. Circles mark means; squares mark medians.</desc><text x="180" y="25" class="svg-heading">P10-P90 utility range on a shared 0-1 scale</text><line x1="180.00" y1="46" x2="180.00" y2="176" class="grid-line" /><text x="180.00" y="198" text-anchor="middle" class="svg-tick">0.0</text><line x1="289.20" y1="46" x2="289.20" y2="176" class="grid-line" /><text x="289.20" y="198" text-anchor="middle" class="svg-tick">0.2</text><line x1="398.40" y1="46" x2="398.40" y2="176" class="grid-line" /><text x="398.40" y="198" text-anchor="middle" class="svg-tick">0.4</text><line x1="507.60" y1="46" x2="507.60" y2="176" class="grid-line" /><text x="507.60" y="198" text-anchor="middle" class="svg-tick">0.6</text><line x1="616.80" y1="46" x2="616.80" y2="176" class="grid-line" /><text x="616.80" y="198" text-anchor="middle" class="svg-tick">0.8</text><line x1="726.00" y1="46" x2="726.00" y2="176" class="grid-line" /><text x="726.00" y="198" text-anchor="middle" class="svg-tick">1.0</text><text x="166" y="83.00" text-anchor="end" class="svg-label">Remote Startup</text><line x1="503.72" y1="78.00" x2="582.37" y2="78.00" class="range-line" /><line x1="503.72" y1="71.00" x2="503.72" y2="85.00" class="range-cap" /><line x1="582.37" y1="71.00" x2="582.37" y2="85.00" class="range-cap" /><rect x="537.39" y="74.00" width="8" height="8" class="median-marker"><title>Median</title></rect><circle cx="542.30" cy="78.00" r="5" class="mean-marker"><title>Mean</title></circle><text x="166" y="137.00" text-anchor="end" class="svg-label">Stable Corp</text><line x1="448.23" y1="132.00" x2="491.89" y2="132.00" class="range-line" /><line x1="448.23" y1="125.00" x2="448.23" y2="139.00" class="range-cap" /><line x1="491.89" y1="125.00" x2="491.89" y2="139.00" class="range-cap" /><rect x="465.09" y="128.00" width="8" height="8" class="median-marker"><title>Median</title></rect><circle cx="469.62" cy="132.00" r="5" class="mean-marker"><title>Mean</title></circle><g transform="translate(180,44)"><circle cx="5" cy="0" r="5" class="mean-marker" /><text x="16" y="4" class="svg-tick">Mean</text><rect x="76" y="-4" width="8" height="8" class="median-marker" /><text x="92" y="4" class="svg-tick">Median</text></g></svg><p class="note">Chart alternative: the complete numerical uncertainty table appears immediately above.</p></section><section class="panel" aria-labelledby="contributions-heading"><p class="section-kicker">Preference structure</p><h2 id="contributions-heading">Criterion contributions</h2><p>Each contribution is the stored criterion mean utility multiplied by its recorded weight. These modeled components are not causal effects.</p><svg class="chart compact-chart" viewBox="0 0 700 226" role="img" aria-labelledby="contribution-chart-title-0 contribution-chart-desc-0"><title id="contribution-chart-title-0">Weighted criterion contributions for Remote Startup</title><desc id="contribution-chart-desc-0">Salary contributes 0.1803 utility points. Work Life Balance contributes 0.1249 utility points. Growth contributes 0.2083 utility points. Commute contributes 0.1500 utility points. These are modeled utility contributions, not causal effects.</desc><text x="190" y="22" class="svg-heading">Remote Startup</text><text x="178" y="57" text-anchor="end" class="svg-label">Salary</text><rect x="190" y="42" width="470" height="20" class="bar-track" /><rect x="190" y="42" width="84.74" height="20" class="contribution-bar" /><text x="282.74" y="57" class="svg-value">0.1803</text><text x="178" y="95" text-anchor="end" class="svg-label">Work Life Balance</text><rect x="190" y="80" width="470" height="20" class="bar-track" /><rect x="190" y="80" width="58.72" height="20" class="contribution-bar" /><text x="256.72" y="95" class="svg-value">0.1249</text><text x="178" y="133" text-anchor="end" class="svg-label">Growth</text><rect x="190" y="118" width="470" height="20" class="bar-track" /><rect x="190" y="118" width="97.91" height="20" class="contribution-bar" /><text x="295.91" y="133" class="svg-value">0.2083</text><text x="178" y="171" text-anchor="end" class="svg-label">Commute</text><rect x="190" y="156" width="470" height="20" class="bar-track" /><rect x="190" y="156" width="70.50" height="20" class="contribution-bar" /><text x="268.50" y="171" class="svg-value">0.1500</text></svg><svg class="chart compact-chart" viewBox="0 0 700 226" role="img" aria-labelledby="contribution-chart-title-1 contribution-chart-desc-1"><title id="contribution-chart-title-1">Weighted criterion contributions for Stable Corp</title><desc id="contribution-chart-desc-1">Salary contributes 0.1951 utility points. Work Life Balance contributes 0.1250 utility points. Growth contributes 0.1355 utility points. Commute contributes 0.0749 utility points. These are modeled utility contributions, not causal effects.</desc><text x="190" y="22" class="svg-heading">Stable Corp</text><text x="178" y="57" text-anchor="end" class="svg-label">Salary</text><rect x="190" y="42" width="470" height="20" class="bar-track" /><rect x="190" y="42" width="91.68" height="20" class="contribution-bar" /><text x="289.68" y="57" class="svg-value">0.1951</text><text x="178" y="95" text-anchor="end" class="svg-label">Work Life Balance</text><rect x="190" y="80" width="470" height="20" class="bar-track" /><rect x="190" y="80" width="58.73" height="20" class="contribution-bar" /><text x="256.73" y="95" class="svg-value">0.1250</text><text x="178" y="133" text-anchor="end" class="svg-label">Growth</text><rect x="190" y="118" width="470" height="20" class="bar-track" /><rect x="190" y="118" width="63.69" height="20" class="contribution-bar" /><text x="261.69" y="133" class="svg-value">0.1355</text><text x="178" y="171" text-anchor="end" class="svg-label">Commute</text><rect x="190" y="156" width="470" height="20" class="bar-track" /><rect x="190" y="156" width="35.21" height="20" class="contribution-bar" /><text x="233.21" y="171" class="svg-value">0.0749</text></svg><div class="table-wrap"><table><caption>Numerical alternative to the contribution charts</caption><thead><tr><th scope="col">Alternative</th><th scope="col">Criterion</th><th scope="col" class="numeric">Weight</th><th scope="col" class="numeric">Criterion mean utility</th><th scope="col" class="numeric">Weighted contribution</th></tr></thead><tbody><tr><th scope="row">Remote Startup</th><td>Salary<br><span class="id">salary</span></td><td class="numeric">0.35</td><td class="numeric">0.5151</td><td class="numeric">0.1803</td></tr><tr><th scope="row">Remote Startup</th><td>Work Life Balance<br><span class="id">work_life_balance</span></td><td class="numeric">0.25</td><td class="numeric">0.4997</td><td class="numeric">0.1249</td></tr><tr><th scope="row">Remote Startup</th><td>Growth<br><span class="id">growth</span></td><td class="numeric">0.25</td><td class="numeric">0.8333</td><td class="numeric">0.2083</td></tr><tr><th scope="row">Remote Startup</th><td>Commute<br><span class="id">commute</span></td><td class="numeric">0.15</td><td class="numeric">1</td><td class="numeric">0.15</td></tr><tr><th scope="row">Stable Corp</th><td>Salary<br><span class="id">salary</span></td><td class="numeric">0.35</td><td class="numeric">0.5573</td><td class="numeric">0.1951</td></tr><tr><th scope="row">Stable Corp</th><td>Work Life Balance<br><span class="id">work_life_balance</span></td><td class="numeric">0.25</td><td class="numeric">0.4998</td><td class="numeric">0.125</td></tr><tr><th scope="row">Stable Corp</th><td>Growth<br><span class="id">growth</span></td><td class="numeric">0.25</td><td class="numeric">0.542</td><td class="numeric">0.1355</td></tr><tr><th scope="row">Stable Corp</th><td>Commute<br><span class="id">commute</span></td><td class="numeric">0.15</td><td class="numeric">0.4994</td><td class="numeric">0.0749</td></tr></tbody></table></div></section><section class="panel" aria-labelledby="constraints-heading"><p class="section-kicker">Eligibility</p><h2 id="constraints-heading">Hard constraints</h2><div class="table-wrap"><table><caption>Alternatives excluded before utility ranking</caption><thead><tr><th scope="col">Alternative</th><th scope="col">Failed constraint</th><th scope="col">Criterion</th><th scope="col">Operator</th><th scope="col">Threshold</th><th scope="col">Relevant estimate boundary</th><th scope="col">Reason</th></tr></thead><tbody><tr><th scope="row">Local Nonprofit<br><span class="id">local-nonprofit</span></th><td>minimum_salary</td><td>Salary</td><td class="numeric">&gt;=</td><td class="numeric">50,000</td><td>minimum: 48,000</td><td>Alternative &#x27;local-nonprofit&#x27; fails constraint &#x27;minimum_salary&#x27;: minimum 48000 must be at least 50000.</td></tr></tbody></table></div></section><section class="panel" aria-labelledby="sensitivity-heading"><p class="section-kicker">Preference sensitivity</p><h2 id="sensitivity-heading">When could the leader change?</h2><div class="distinction"><div><strong>Uncertainty at current weights</strong><p>Monte Carlo ranges describe uncertainty in the estimates while preferences stay fixed.</p></div><div><strong>Sensitivity to changing preferences</strong><p>This section varies one criterion weight at a time while reusing the same simulation sample.</p></div></div><div class="recommendation close"><span class="status caution">Closest real winner switch</span><h3>Salary weight: 0.35 → 0.84359</h3><p>At the threshold, Remote Startup and Stable Corp tie on stored fixed-sample mean utility. Beyond it in the reported direction, Stable Corp leads.</p><div class="metrics"><div class="metric"><span>Absolute weight change</span><strong>0.49359</strong></div><div class="metric"><span>New winner beyond threshold</span><strong>Stable Corp</strong></div></div></div><p><strong>Baseline winner:</strong> Remote Startup. <strong>Method:</strong> fixed_sample_linear_weight_sensitivity.</p><div class="table-wrap"><table><caption>Robust interval for every criterion</caption><thead><tr><th scope="col">Criterion</th><th scope="col" class="numeric">Baseline weight</th><th scope="col">Robust interval</th><th scope="col">Interpretation</th></tr></thead><tbody><tr><th scope="row">Salary<br><span class="id">salary</span></th><td class="numeric">0.35</td><td><span class="interval">[0, 0.84359)</span></td><td>The baseline recommendation remains the unique mean-utility leader while the Salary weight stays in [0, 0.84359).</td></tr><tr><th scope="row">Work Life Balance<br><span class="id">work_life_balance</span></th><td class="numeric">0.25</td><td><span class="interval">[0, 0.999327)</span></td><td>The baseline recommendation remains the unique mean-utility leader while the Work Life Balance weight stays in [0, 0.999327).</td></tr><tr><th scope="row">Growth<br><span class="id">growth</span></th><td class="numeric">0.25</td><td><span class="interval">[0, 1]</span></td><td>The baseline recommendation remains the unique mean-utility leader while the Growth weight stays in [0, 1].</td></tr><tr><th scope="row">Commute<br><span class="id">commute</span></th><td class="numeric">0.15</td><td><span class="interval">[0, 1]</span></td><td>The baseline recommendation remains the unique mean-utility leader while the Commute weight stays in [0, 1].</td></tr></tbody></table></div></section><section class="panel" aria-labelledby="audit-heading"><p class="section-kicker">Assumptions & audit trail</p><h2 id="audit-heading">What this result depends on</h2><div class="two-column"><div><h3>User-confirmed assumptions</h3><ul class="clean-list"><li>All salary values are gross annual euros.</li><li>Criterion estimates are treated as independent in the MVP Monte Carlo model.</li><li>The minimum salary constraint applies conservatively to the full triangular salary range.</li><li>Weights and utility anchors have been reviewed and confirmed by the user.</li></ul></div><div><h3>Warnings</h3><p class="empty-state">No warnings were recorded.</p></div></div><div class="two-column"><div class="table-wrap"><table><caption>Calculation method recorded in the result</caption><tbody><tr><th scope="row">Name</th><td>weighted_utility_with_monte_carlo</td></tr><tr><th scope="row">Recommendation Basis</th><td>monte_carlo_mean_utility</td></tr><tr><th scope="row">Analytical Cross Check</th><td>triangular_raw_mean_weighted_utility</td></tr><tr><th scope="row">Uncertainty Distribution</th><td>triangular</td></tr><tr><th scope="row">Tie Handling</th><td>split_win_credit</td></tr><tr><th scope="row">Numerical Tolerance</th><td>1e-12</td></tr><tr><th scope="row">Close Call Threshold</th><td>0.6</td></tr><tr><th scope="row">Utility Clamping</th><td>True</td></tr><tr><th scope="row">Percentile Method</th><td>linear_interpolation_index_n_minus_1</td></tr><tr><th scope="row">Constraint Interpretation</th><td>conservative_all_supported_values</td></tr></tbody></table></div><div class="table-wrap"><table><caption>Reproducibility metadata recorded in the result</caption><tbody><tr><th scope="row">Random Seed</th><td>20260720</td></tr><tr><th scope="row">Monte Carlo Samples</th><td>10000</td></tr><tr><th scope="row">Random Generator</th><td>python_random.Random</td></tr></tbody></table></div></div><details><summary>Mathematical details</summary><div class="details-body">
+<p>The report displays stored engine results; it does not run these calculations.</p>
+<pre class="formula">Anchor normalization:
+utility = clamp((value − worst anchor) / (best anchor − worst anchor), 0, 1)
+
+Weighted utility:
+total utility = Σ (criterion weight × normalized criterion utility)
+
+Triangular raw mean:
+mean = (minimum + most likely + maximum) / 3</pre>
+<p>Monte Carlo ranking draws each confirmed triangular estimate with the recorded seed, calculates weighted utility, and ranks feasible alternatives by mean utility. Simulation ties split win credit.</p>
+<pre class="formula">One-at-a-time fixed-sample sensitivity:
+w_target(x) = x
+w_other(x) = original w_other × (1 − x) / (1 − original w_target)</pre>
+<p>The engine reuses stored criterion means, solves linear winner crossings analytically, and verifies both sides. It does not resample or change hard-constraint eligibility.</p>
+</div></details><details><summary>Raw audit data (escaped source result JSON)</summary><div class="details-body"><pre class="formula raw-json">{
+  &quot;result_version&quot;: &quot;1.0&quot;,
+  &quot;model_version&quot;: &quot;1.0&quot;,
+  &quot;model_type&quot;: &quot;multi_criteria&quot;,
+  &quot;decision_id&quot;: &quot;job-choice-example&quot;,
+  &quot;engine_version&quot;: &quot;0.4.0&quot;,
+  &quot;status&quot;: &quot;completed&quot;,
+  &quot;assumptions&quot;: [
+    &quot;All salary values are gross annual euros.&quot;,
+    &quot;Criterion estimates are treated as independent in the MVP Monte Carlo model.&quot;,
+    &quot;The minimum salary constraint applies conservatively to the full triangular salary range.&quot;,
+    &quot;Weights and utility anchors have been reviewed and confirmed by the user.&quot;
+  ],
+  &quot;warnings&quot;: [],
+  &quot;method&quot;: {
+    &quot;name&quot;: &quot;weighted_utility_with_monte_carlo&quot;,
+    &quot;recommendation_basis&quot;: &quot;monte_carlo_mean_utility&quot;,
+    &quot;analytical_cross_check&quot;: &quot;triangular_raw_mean_weighted_utility&quot;,
+    &quot;uncertainty_distribution&quot;: &quot;triangular&quot;,
+    &quot;tie_handling&quot;: &quot;split_win_credit&quot;,
+    &quot;numerical_tolerance&quot;: 1e-12,
+    &quot;close_call_threshold&quot;: 0.6,
+    &quot;utility_clamping&quot;: true,
+    &quot;percentile_method&quot;: &quot;linear_interpolation_index_n_minus_1&quot;,
+    &quot;constraint_interpretation&quot;: &quot;conservative_all_supported_values&quot;
+  },
+  &quot;reproducibility&quot;: {
+    &quot;random_seed&quot;: 20260720,
+    &quot;monte_carlo_samples&quot;: 10000,
+    &quot;random_generator&quot;: &quot;python_random.Random&quot;
+  },
+  &quot;alternative_results&quot;: [
+    {
+      &quot;alternative_id&quot;: &quot;remote-startup&quot;,
+      &quot;analytical_raw_means&quot;: {
+        &quot;salary&quot;: 73333.33333333333,
+        &quot;work_life_balance&quot;: 6.0,
+        &quot;growth&quot;: 8.666666666666666,
+        &quot;commute&quot;: 0.0
+      },
+      &quot;analytical_utility&quot;: 0.6636363636363636,
+      &quot;monte_carlo_mean_utility&quot;: 0.6635452465276793,
+      &quot;criterion_mean_utilities&quot;: {
+        &quot;salary&quot;: 0.5151253756524663,
+        &quot;work_life_balance&quot;: 0.4997124661229311,
+        &quot;growth&quot;: 0.8332929940743335,
+        &quot;commute&quot;: 1.0
+      },
+      &quot;weighted_criterion_contributions&quot;: {
+        &quot;salary&quot;: 0.1802938814783632,
+        &quot;work_life_balance&quot;: 0.12492811653073277,
+        &quot;growth&quot;: 0.2083232485185834,
+        &quot;commute&quot;: 0.15
+      },
+      &quot;win_probability&quot;: 0.9876,
+      &quot;utility_distribution&quot;: {
+        &quot;minimum&quot;: 0.4841249837222759,
+        &quot;maximum&quot;: 0.8464423297387387,
+        &quot;standard_deviation&quot;: 0.05545003406261265,
+        &quot;percentile_10&quot;: 0.5928994159406301,
+        &quot;percentile_50&quot;: 0.6618841391143118,
+        &quot;percentile_90&quot;: 0.73693393355641
+      },
+      &quot;clamp_diagnostics&quot;: []
+    },
+    {
+      &quot;alternative_id&quot;: &quot;stable-corp&quot;,
+      &quot;analytical_raw_means&quot;: {
+        &quot;salary&quot;: 75666.66666666667,
+        &quot;work_life_balance&quot;: 6.0,
+        &quot;growth&quot;: 6.333333333333333,
+        &quot;commute&quot;: 60.0
+      },
+      &quot;analytical_utility&quot;: 0.5305681818181818,
+      &quot;monte_carlo_mean_utility&quot;: 0.5304326874400469,
+      &quot;criterion_mean_utilities&quot;: {
+        &quot;salary&quot;: 0.5573062792558713,
+        &quot;work_life_balance&quot;: 0.49983210402865064,
+        &quot;growth&quot;: 0.5420348317594054,
+        &quot;commute&quot;: 0.4993917050231862
+      },
+      &quot;weighted_criterion_contributions&quot;: {
+        &quot;salary&quot;: 0.19505719773955493,
+        &quot;work_life_balance&quot;: 0.12495802600716266,
+        &quot;growth&quot;: 0.13550870793985134,
+        &quot;commute&quot;: 0.07490875575347793
+      },
+      &quot;win_probability&quot;: 0.0124,
+      &quot;utility_distribution&quot;: {
+        &quot;minimum&quot;: 0.43300225046743057,
+        &quot;maximum&quot;: 0.6379682927202004,
+        &quot;standard_deviation&quot;: 0.030889391235556108,
+        &quot;percentile_10&quot;: 0.4912621213952928,
+        &quot;percentile_50&quot;: 0.529469685279148,
+        &quot;percentile_90&quot;: 0.5712353825640573
+      },
+      &quot;clamp_diagnostics&quot;: []
+    }
+  ],
+  &quot;excluded_alternatives&quot;: [
+    {
+      &quot;alternative_id&quot;: &quot;local-nonprofit&quot;,
+      &quot;failed_constraints&quot;: [
+        {
+          &quot;constraint_id&quot;: &quot;minimum_salary&quot;,
+          &quot;criterion_id&quot;: &quot;salary&quot;,
+          &quot;operator&quot;: &quot;&gt;=&quot;,
+          &quot;threshold&quot;: 50000.0,
+          &quot;relevant_estimate_boundary&quot;: {
+            &quot;name&quot;: &quot;minimum&quot;,
+            &quot;values&quot;: [
+              48000.0
+            ]
+          },
+          &quot;human_explanation&quot;: &quot;Alternative &#x27;local-nonprofit&#x27; fails constraint &#x27;minimum_salary&#x27;: minimum 48000 must be at least 50000.&quot;
+        }
+      ]
+    }
+  ],
+  &quot;sensitivity&quot;: {
+    &quot;status&quot;: &quot;analyzed&quot;,
+    &quot;method&quot;: &quot;fixed_sample_linear_weight_sensitivity&quot;,
+    &quot;ranking_basis&quot;: &quot;monte_carlo_mean_utility&quot;,
+    &quot;random_seed&quot;: 20260720,
+    &quot;simulation_count&quot;: 10000,
+    &quot;fixed_sample_reused&quot;: true,
+    &quot;numerical_tolerance&quot;: 1e-12,
+    &quot;verification_epsilon_rule&quot;: &quot;preferred max(1e-7, 1e-6 * max(1, abs(threshold))), reduced near adjacent crossings&quot;,
+    &quot;baseline_winner_id&quot;: &quot;remote-startup&quot;,
+    &quot;baseline_tied_alternative_ids&quot;: [],
+    &quot;criteria&quot;: [
+      {
+        &quot;criterion_id&quot;: &quot;salary&quot;,
+        &quot;baseline_weight&quot;: 0.35,
+        &quot;status&quot;: &quot;analyzed&quot;,
+        &quot;robust_interval&quot;: {
+          &quot;minimum_weight&quot;: 0.0,
+          &quot;maximum_weight&quot;: 0.8435903602946223,
+          &quot;minimum_inclusive&quot;: true,
+          &quot;maximum_inclusive&quot;: false
+        },
+        &quot;lower_switch&quot;: null,
+        &quot;upper_switch&quot;: {
+          &quot;direction&quot;: &quot;upper&quot;,
+          &quot;change_type&quot;: &quot;winner_switch&quot;,
+          &quot;threshold_weight&quot;: 0.8435903602946223,
+          &quot;new_winner_id&quot;: &quot;stable-corp&quot;,
+          &quot;new_tied_winner_ids&quot;: [],
+          &quot;tie_alternative_ids&quot;: [
+            &quot;remote-startup&quot;,
+            &quot;stable-corp&quot;
+          ],
+          &quot;mean_utility_at_threshold&quot;: 0.5508396810812521,
+          &quot;verified&quot;: true,
+          &quot;verification_epsilon&quot;: 1e-06,
+          &quot;lower_probe_weight&quot;: 0.8435893602946223,
+          &quot;lower_probe_leader_ids&quot;: [
+            &quot;remote-startup&quot;
+          ],
+          &quot;upper_probe_weight&quot;: 0.8435913602946223,
+          &quot;upper_probe_leader_ids&quot;: [
+            &quot;stable-corp&quot;
+          ],
+          &quot;explanation&quot;: &quot;When the weight of Annual salary moves above 0.843590360295, the fixed-sample mean-utility winner changes from Remote startup to Stable corporation.&quot;
+        },
+        &quot;explanation&quot;: &quot;&#x27;remote-startup&#x27; remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 0.843590360295; a switch boundary is a tie and is excluded.&quot;
+      },
+      {
+        &quot;criterion_id&quot;: &quot;work_life_balance&quot;,
+        &quot;baseline_weight&quot;: 0.25,
+        &quot;status&quot;: &quot;analyzed&quot;,
+        &quot;robust_interval&quot;: {
+          &quot;minimum_weight&quot;: 0.0,
+          &quot;maximum_weight&quot;: 0.9993265259350624,
+          &quot;minimum_inclusive&quot;: true,
+          &quot;maximum_inclusive&quot;: false
+        },
+        &quot;lower_switch&quot;: null,
+        &quot;upper_switch&quot;: {
+          &quot;direction&quot;: &quot;upper&quot;,
+          &quot;change_type&quot;: &quot;winner_switch&quot;,
+          &quot;threshold_weight&quot;: 0.9993265259350624,
+          &quot;new_winner_id&quot;: &quot;stable-corp&quot;,
+          &quot;new_tied_winner_ids&quot;: [],
+          &quot;tie_alternative_ids&quot;: [
+            &quot;remote-startup&quot;,
+            &quot;stable-corp&quot;
+          ],
+          &quot;mean_utility_at_threshold&quot;: 0.4998595822943833,
+          &quot;verified&quot;: true,
+          &quot;verification_epsilon&quot;: 1e-06,
+          &quot;lower_probe_weight&quot;: 0.9993255259350624,
+          &quot;lower_probe_leader_ids&quot;: [
+            &quot;remote-startup&quot;
+          ],
+          &quot;upper_probe_weight&quot;: 0.9993275259350625,
+          &quot;upper_probe_leader_ids&quot;: [
+            &quot;stable-corp&quot;
+          ],
+          &quot;explanation&quot;: &quot;When the weight of Work-life balance moves above 0.999326525935, the fixed-sample mean-utility winner changes from Remote startup to Stable corporation.&quot;
+        },
+        &quot;explanation&quot;: &quot;&#x27;remote-startup&#x27; remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 0.999326525935; a switch boundary is a tie and is excluded.&quot;
+      },
+      {
+        &quot;criterion_id&quot;: &quot;growth&quot;,
+        &quot;baseline_weight&quot;: 0.25,
+        &quot;status&quot;: &quot;analyzed&quot;,
+        &quot;robust_interval&quot;: {
+          &quot;minimum_weight&quot;: 0.0,
+          &quot;maximum_weight&quot;: 1.0,
+          &quot;minimum_inclusive&quot;: true,
+          &quot;maximum_inclusive&quot;: true
+        },
+        &quot;lower_switch&quot;: null,
+        &quot;upper_switch&quot;: null,
+        &quot;explanation&quot;: &quot;&#x27;remote-startup&#x27; remains the unique fixed-sample mean-utility winner across the full permitted weight range from 0 to 1.&quot;
+      },
+      {
+        &quot;criterion_id&quot;: &quot;commute&quot;,
+        &quot;baseline_weight&quot;: 0.15,
+        &quot;status&quot;: &quot;analyzed&quot;,
+        &quot;robust_interval&quot;: {
+          &quot;minimum_weight&quot;: 0.0,
+          &quot;maximum_weight&quot;: 1.0,
+          &quot;minimum_inclusive&quot;: true,
+          &quot;maximum_inclusive&quot;: true
+        },
+        &quot;lower_switch&quot;: null,
+        &quot;upper_switch&quot;: null,
+        &quot;explanation&quot;: &quot;&#x27;remote-startup&#x27; remains the unique fixed-sample mean-utility winner across the full permitted weight range from 0 to 1.&quot;
+      }
+    ],
+    &quot;explanation&quot;: &quot;Each criterion was varied independently from 0 to 1 using the same Monte Carlo sample; winner switches concern mean-utility ranking, not the 60% close-call classification.&quot;
+  },
+  &quot;recommendation&quot;: {
+    &quot;status&quot;: &quot;recommended&quot;,
+    &quot;alternative_id&quot;: &quot;remote-startup&quot;,
+    &quot;tied_alternative_ids&quot;: [],
+    &quot;leading_monte_carlo_mean_utility&quot;: 0.6635452465276793,
+    &quot;leading_win_probability&quot;: 0.9876,
+    &quot;conditional_statement&quot;: &quot;Under the confirmed preferences, estimates, constraints, time horizon, and assumptions, Remote startup has the unique highest Monte Carlo mean utility and wins 98.8% of simulated scenarios.&quot;
+  }
+}
+</pre></div></details></section></main><footer class="report-footer">Decision Architect · Transparent, reproducible decision support</footer></div>
+</body>
+</html>

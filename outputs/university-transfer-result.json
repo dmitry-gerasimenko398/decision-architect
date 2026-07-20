@@ -1,0 +1,401 @@
+{
+  "result_version": "1.0",
+  "model_version": "1.0",
+  "model_type": "multi_criteria",
+  "decision_id": "university-faculty-transfer",
+  "engine_version": "0.4.0",
+  "status": "completed",
+  "assumptions": [
+    "The postpone alternative is an approximate strategy over the full comparison horizon: remain in the current faculty for one semester, gather information, and then choose between staying and transferring. This multi-criteria model does not solve that staged future decision as a full sequential decision process.",
+    "Uncertainty for different criteria is sampled independently. This is an approximation and may not fully reflect real relationships between outcomes.",
+    "Value of additional information and reversibility represents only residual value not already reflected in subject interest, career prospects, graduation time, or compatibility with family responsibilities.",
+    "All three alternatives have been verified not to require relocation, regular overnight stays away from home, or mandatory placements that prevent regular returns home.",
+    "The four subjective criteria use ratings from 0 (worst meaningful outcome) to 10 (best meaningful outcome).",
+    "Time until graduation is measured in semesters, with 7 semesters as the worst meaningful anchor and 4 semesters as the best meaningful anchor.",
+    "One-at-a-time weight sensitivity preserves the relative proportions of other weights and does not model simultaneous changes to several preference weights."
+  ],
+  "warnings": [],
+  "method": {
+    "name": "weighted_utility_with_monte_carlo",
+    "recommendation_basis": "monte_carlo_mean_utility",
+    "analytical_cross_check": "triangular_raw_mean_weighted_utility",
+    "uncertainty_distribution": "triangular",
+    "tie_handling": "split_win_credit",
+    "numerical_tolerance": 1e-12,
+    "close_call_threshold": 0.6,
+    "utility_clamping": true,
+    "percentile_method": "linear_interpolation_index_n_minus_1",
+    "constraint_interpretation": "conservative_all_supported_values"
+  },
+  "reproducibility": {
+    "random_seed": 314159,
+    "monte_carlo_samples": 10000,
+    "random_generator": "python_random.Random"
+  },
+  "alternative_results": [
+    {
+      "alternative_id": "postpone",
+      "analytical_raw_means": {
+        "family_compatibility": 8.666666666666666,
+        "subject_interest": 6.0,
+        "career_prospects": 7.0,
+        "time_to_graduation": 6.0,
+        "information_reversibility": 9.0,
+        "near_home_compatibility": 1.0
+      },
+      "analytical_utility": 0.69,
+      "monte_carlo_mean_utility": 0.6899506869091862,
+      "criterion_mean_utilities": {
+        "family_compatibility": 0.8664110556519184,
+        "subject_interest": 0.6004710847605956,
+        "career_prospects": 0.6997877167784033,
+        "time_to_graduation": 0.3329693570230862,
+        "information_reversibility": 0.9000665211431805,
+        "near_home_compatibility": 1.0
+      },
+      "weighted_criterion_contributions": {
+        "family_compatibility": 0.2599233166955755,
+        "subject_interest": 0.1501177711901489,
+        "career_prospects": 0.13995754335568067,
+        "time_to_graduation": 0.049945403553462935,
+        "information_reversibility": 0.09000665211431806,
+        "near_home_compatibility": 0.0
+      },
+      "win_probability": 0.8549,
+      "utility_distribution": {
+        "minimum": 0.5439109275573795,
+        "maximum": 0.8212525918887132,
+        "standard_deviation": 0.038225029733142527,
+        "percentile_10": 0.6403883335702857,
+        "percentile_50": 0.6899047067444626,
+        "percentile_90": 0.7397859325889511
+      },
+      "clamp_diagnostics": []
+    },
+    {
+      "alternative_id": "transfer_now",
+      "analytical_raw_means": {
+        "family_compatibility": 6.0,
+        "subject_interest": 8.0,
+        "career_prospects": 7.666666666666667,
+        "time_to_graduation": 5.333333333333333,
+        "information_reversibility": 2.0,
+        "near_home_compatibility": 1.0
+      },
+      "analytical_utility": 0.6366666666666667,
+      "monte_carlo_mean_utility": 0.636820030565787,
+      "criterion_mean_utilities": {
+        "family_compatibility": 0.6011894911758027,
+        "subject_interest": 0.800278487450334,
+        "career_prospects": 0.7660497505428172,
+        "time_to_graduation": 0.5551064459018172,
+        "information_reversibility": 0.1991764435662662,
+        "near_home_compatibility": 1.0
+      },
+      "weighted_criterion_contributions": {
+        "family_compatibility": 0.1803568473527408,
+        "subject_interest": 0.2000696218625835,
+        "career_prospects": 0.15320995010856345,
+        "time_to_graduation": 0.08326596688527259,
+        "information_reversibility": 0.019917644356626622,
+        "near_home_compatibility": 0.0
+      },
+      "win_probability": 0.1435,
+      "utility_distribution": {
+        "minimum": 0.5299112182286357,
+        "maximum": 0.7345895034028934,
+        "standard_deviation": 0.03162430702190338,
+        "percentile_10": 0.5958397953927751,
+        "percentile_50": 0.636703833505685,
+        "percentile_90": 0.6786021327203662
+      },
+      "clamp_diagnostics": []
+    },
+    {
+      "alternative_id": "stay",
+      "analytical_raw_means": {
+        "family_compatibility": 8.0,
+        "subject_interest": 3.0,
+        "career_prospects": 5.0,
+        "time_to_graduation": 4.333333333333333,
+        "information_reversibility": 3.0,
+        "near_home_compatibility": 1.0
+      },
+      "analytical_utility": 0.5783333333333334,
+      "monte_carlo_mean_utility": 0.5786658303516664,
+      "criterion_mean_utilities": {
+        "family_compatibility": 0.800339922152679,
+        "subject_interest": 0.30096668666400894,
+        "career_prospects": 0.5000374216918348,
+        "time_to_graduation": 0.8884953748244149,
+        "information_reversibility": 0.3004039147783124,
+        "near_home_compatibility": 1.0
+      },
+      "weighted_criterion_contributions": {
+        "family_compatibility": 0.24010197664580368,
+        "subject_interest": 0.07524167166600224,
+        "career_prospects": 0.10000748433836698,
+        "time_to_graduation": 0.13327430622366224,
+        "information_reversibility": 0.030040391477831243,
+        "near_home_compatibility": 0.0
+      },
+      "win_probability": 0.0016,
+      "utility_distribution": {
+        "minimum": 0.49725383416736757,
+        "maximum": 0.6513343164464556,
+        "standard_deviation": 0.021905704440832716,
+        "percentile_10": 0.5506029780958059,
+        "percentile_50": 0.5786884918950941,
+        "percentile_90": 0.6071590692257062
+      },
+      "clamp_diagnostics": []
+    }
+  ],
+  "excluded_alternatives": [],
+  "sensitivity": {
+    "status": "analyzed",
+    "method": "fixed_sample_linear_weight_sensitivity",
+    "ranking_basis": "monte_carlo_mean_utility",
+    "random_seed": 314159,
+    "simulation_count": 10000,
+    "fixed_sample_reused": true,
+    "numerical_tolerance": 1e-12,
+    "verification_epsilon_rule": "preferred max(1e-7, 1e-6 * max(1, abs(threshold))), reduced near adjacent crossings",
+    "baseline_winner_id": "postpone",
+    "baseline_tied_alternative_ids": [],
+    "criteria": [
+      {
+        "criterion_id": "family_compatibility",
+        "baseline_weight": 0.3,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.12464378238643455,
+          "maximum_weight": 1.0,
+          "minimum_inclusive": false,
+          "maximum_inclusive": true
+        },
+        "lower_switch": {
+          "direction": "lower",
+          "change_type": "winner_switch",
+          "threshold_weight": 0.12464378238643455,
+          "new_winner_id": "transfer_now",
+          "new_tied_winner_ids": [],
+          "tie_alternative_ids": [
+            "postpone",
+            "transfer_now"
+          ],
+          "mean_utility_at_threshold": 0.6457457971642996,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.12464278238643454,
+          "lower_probe_leader_ids": [
+            "transfer_now"
+          ],
+          "upper_probe_weight": 0.12464478238643455,
+          "upper_probe_leader_ids": [
+            "postpone"
+          ],
+          "explanation": "When the weight of Compatibility with family responsibilities moves below 0.124643782386, the fixed-sample mean-utility winner changes from Postpone for one semester to Transfer now."
+        },
+        "upper_switch": null,
+        "explanation": "'postpone' remains the unique fixed-sample mean-utility winner inside the robust interval from 0.124643782386 to 1; a switch boundary is a tie and is excluded."
+      },
+      {
+        "criterion_id": "subject_interest",
+        "baseline_weight": 0.25,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 0.40754051568937205,
+          "minimum_inclusive": true,
+          "maximum_inclusive": false
+        },
+        "lower_switch": null,
+        "upper_switch": {
+          "direction": "upper",
+          "change_type": "winner_switch",
+          "threshold_weight": 0.40754051568937205,
+          "new_winner_id": "transfer_now",
+          "new_tied_winner_ids": [],
+          "tie_alternative_ids": [
+            "postpone",
+            "transfer_now"
+          ],
+          "mean_utility_at_threshold": 0.6711551366876277,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.4075395156893721,
+          "lower_probe_leader_ids": [
+            "postpone"
+          ],
+          "upper_probe_weight": 0.407541515689372,
+          "upper_probe_leader_ids": [
+            "transfer_now"
+          ],
+          "explanation": "When the weight of Subject interest moves above 0.407540515689, the fixed-sample mean-utility winner changes from Postpone for one semester to Transfer now."
+        },
+        "explanation": "'postpone' remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 0.407540515689; a switch boundary is a tie and is excluded."
+      },
+      {
+        "criterion_id": "career_prospects",
+        "baseline_weight": 0.2,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 0.5560060924696245,
+          "minimum_inclusive": true,
+          "maximum_inclusive": false
+        },
+        "lower_switch": null,
+        "upper_switch": {
+          "direction": "upper",
+          "change_type": "winner_switch",
+          "threshold_weight": 0.5560060924696245,
+          "new_winner_id": "transfer_now",
+          "new_tied_winner_ids": [],
+          "tie_alternative_ids": [
+            "postpone",
+            "transfer_now"
+          ],
+          "mean_utility_at_threshold": 0.6943282401157448,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.5560050924696245,
+          "lower_probe_leader_ids": [
+            "postpone"
+          ],
+          "upper_probe_weight": 0.5560070924696245,
+          "upper_probe_leader_ids": [
+            "transfer_now"
+          ],
+          "explanation": "When the weight of Career prospects moves above 0.55600609247, the fixed-sample mean-utility winner changes from Postpone for one semester to Transfer now."
+        },
+        "explanation": "'postpone' remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 0.55600609247; a switch boundary is a tie and is excluded."
+      },
+      {
+        "criterion_id": "time_to_graduation",
+        "baseline_weight": 0.15,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 0.2918575066953488,
+          "minimum_inclusive": true,
+          "maximum_inclusive": false
+        },
+        "lower_switch": null,
+        "upper_switch": {
+          "direction": "upper",
+          "change_type": "winner_switch",
+          "threshold_weight": 0.2918575066953488,
+          "new_winner_id": "stay",
+          "new_tied_winner_ids": [],
+          "tie_alternative_ids": [
+            "postpone",
+            "stay"
+          ],
+          "mean_utility_at_threshold": 0.6303736499745602,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.29185650669534885,
+          "lower_probe_leader_ids": [
+            "postpone"
+          ],
+          "upper_probe_weight": 0.2918585066953488,
+          "upper_probe_leader_ids": [
+            "stay"
+          ],
+          "explanation": "When the weight of Time until graduation moves above 0.291857506695, the fixed-sample mean-utility winner changes from Postpone for one semester to Stay in current faculty."
+        },
+        "explanation": "'postpone' remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 0.291857506695; a switch boundary is a tie and is excluded."
+      },
+      {
+        "criterion_id": "information_reversibility",
+        "baseline_weight": 0.1,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.026180015077200885,
+          "maximum_weight": 1.0,
+          "minimum_inclusive": false,
+          "maximum_inclusive": true
+        },
+        "lower_switch": {
+          "direction": "lower",
+          "change_type": "winner_switch",
+          "threshold_weight": 0.026180015077200885,
+          "new_winner_id": "transfer_now",
+          "new_tied_winner_ids": [],
+          "tie_alternative_ids": [
+            "postpone",
+            "transfer_now"
+          ],
+          "mean_utility_at_threshold": 0.6727165227811918,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.026179015077200884,
+          "lower_probe_leader_ids": [
+            "transfer_now"
+          ],
+          "upper_probe_weight": 0.026181015077200886,
+          "upper_probe_leader_ids": [
+            "postpone"
+          ],
+          "explanation": "When the weight of Value of additional information and reversibility moves below 0.0261800150772, the fixed-sample mean-utility winner changes from Postpone for one semester to Transfer now."
+        },
+        "upper_switch": null,
+        "explanation": "'postpone' remains the unique fixed-sample mean-utility winner inside the robust interval from 0.0261800150772 to 1; a switch boundary is a tie and is excluded."
+      },
+      {
+        "criterion_id": "near_home_compatibility",
+        "baseline_weight": 0.0,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 1.0,
+          "minimum_inclusive": true,
+          "maximum_inclusive": false
+        },
+        "lower_switch": null,
+        "upper_switch": {
+          "direction": "upper",
+          "change_type": "boundary_tie",
+          "threshold_weight": 1.0,
+          "new_winner_id": null,
+          "new_tied_winner_ids": [
+            "postpone",
+            "stay",
+            "transfer_now"
+          ],
+          "tie_alternative_ids": [
+            "postpone",
+            "stay",
+            "transfer_now"
+          ],
+          "mean_utility_at_threshold": 1.0,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.999999,
+          "lower_probe_leader_ids": [
+            "postpone"
+          ],
+          "upper_probe_weight": 1.0,
+          "upper_probe_leader_ids": [
+            "postpone",
+            "stay",
+            "transfer_now"
+          ],
+          "explanation": "At the permitted boundary weight 1 for Near-home compatibility, Postpone for one semester ties with Stay in current faculty, Transfer now; there is no permitted weight beyond that boundary."
+        },
+        "explanation": "'postpone' remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 1; a switch boundary is a tie and is excluded."
+      }
+    ],
+    "explanation": "Each criterion was varied independently from 0 to 1 using the same Monte Carlo sample; winner switches concern mean-utility ranking, not the 60% close-call classification."
+  },
+  "recommendation": {
+    "status": "recommended",
+    "alternative_id": "postpone",
+    "tied_alternative_ids": [],
+    "leading_monte_carlo_mean_utility": 0.6899506869091862,
+    "leading_win_probability": 0.8549,
+    "conditional_statement": "Under the confirmed preferences, estimates, constraints, time horizon, and assumptions, Postpone for one semester has the unique highest Monte Carlo mean utility and wins 85.5% of simulated scenarios."
+  }
+}

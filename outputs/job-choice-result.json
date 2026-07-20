@@ -1,0 +1,243 @@
+{
+  "result_version": "1.0",
+  "model_version": "1.0",
+  "model_type": "multi_criteria",
+  "decision_id": "job-choice-example",
+  "engine_version": "0.4.0",
+  "status": "completed",
+  "assumptions": [
+    "All salary values are gross annual euros.",
+    "Criterion estimates are treated as independent in the MVP Monte Carlo model.",
+    "The minimum salary constraint applies conservatively to the full triangular salary range.",
+    "Weights and utility anchors have been reviewed and confirmed by the user."
+  ],
+  "warnings": [],
+  "method": {
+    "name": "weighted_utility_with_monte_carlo",
+    "recommendation_basis": "monte_carlo_mean_utility",
+    "analytical_cross_check": "triangular_raw_mean_weighted_utility",
+    "uncertainty_distribution": "triangular",
+    "tie_handling": "split_win_credit",
+    "numerical_tolerance": 1e-12,
+    "close_call_threshold": 0.6,
+    "utility_clamping": true,
+    "percentile_method": "linear_interpolation_index_n_minus_1",
+    "constraint_interpretation": "conservative_all_supported_values"
+  },
+  "reproducibility": {
+    "random_seed": 20260720,
+    "monte_carlo_samples": 10000,
+    "random_generator": "python_random.Random"
+  },
+  "alternative_results": [
+    {
+      "alternative_id": "remote-startup",
+      "analytical_raw_means": {
+        "salary": 73333.33333333333,
+        "work_life_balance": 6.0,
+        "growth": 8.666666666666666,
+        "commute": 0.0
+      },
+      "analytical_utility": 0.6636363636363636,
+      "monte_carlo_mean_utility": 0.6635452465276793,
+      "criterion_mean_utilities": {
+        "salary": 0.5151253756524663,
+        "work_life_balance": 0.4997124661229311,
+        "growth": 0.8332929940743335,
+        "commute": 1.0
+      },
+      "weighted_criterion_contributions": {
+        "salary": 0.1802938814783632,
+        "work_life_balance": 0.12492811653073277,
+        "growth": 0.2083232485185834,
+        "commute": 0.15
+      },
+      "win_probability": 0.9876,
+      "utility_distribution": {
+        "minimum": 0.4841249837222759,
+        "maximum": 0.8464423297387387,
+        "standard_deviation": 0.05545003406261265,
+        "percentile_10": 0.5928994159406301,
+        "percentile_50": 0.6618841391143118,
+        "percentile_90": 0.73693393355641
+      },
+      "clamp_diagnostics": []
+    },
+    {
+      "alternative_id": "stable-corp",
+      "analytical_raw_means": {
+        "salary": 75666.66666666667,
+        "work_life_balance": 6.0,
+        "growth": 6.333333333333333,
+        "commute": 60.0
+      },
+      "analytical_utility": 0.5305681818181818,
+      "monte_carlo_mean_utility": 0.5304326874400469,
+      "criterion_mean_utilities": {
+        "salary": 0.5573062792558713,
+        "work_life_balance": 0.49983210402865064,
+        "growth": 0.5420348317594054,
+        "commute": 0.4993917050231862
+      },
+      "weighted_criterion_contributions": {
+        "salary": 0.19505719773955493,
+        "work_life_balance": 0.12495802600716266,
+        "growth": 0.13550870793985134,
+        "commute": 0.07490875575347793
+      },
+      "win_probability": 0.0124,
+      "utility_distribution": {
+        "minimum": 0.43300225046743057,
+        "maximum": 0.6379682927202004,
+        "standard_deviation": 0.030889391235556108,
+        "percentile_10": 0.4912621213952928,
+        "percentile_50": 0.529469685279148,
+        "percentile_90": 0.5712353825640573
+      },
+      "clamp_diagnostics": []
+    }
+  ],
+  "excluded_alternatives": [
+    {
+      "alternative_id": "local-nonprofit",
+      "failed_constraints": [
+        {
+          "constraint_id": "minimum_salary",
+          "criterion_id": "salary",
+          "operator": ">=",
+          "threshold": 50000.0,
+          "relevant_estimate_boundary": {
+            "name": "minimum",
+            "values": [
+              48000.0
+            ]
+          },
+          "human_explanation": "Alternative 'local-nonprofit' fails constraint 'minimum_salary': minimum 48000 must be at least 50000."
+        }
+      ]
+    }
+  ],
+  "sensitivity": {
+    "status": "analyzed",
+    "method": "fixed_sample_linear_weight_sensitivity",
+    "ranking_basis": "monte_carlo_mean_utility",
+    "random_seed": 20260720,
+    "simulation_count": 10000,
+    "fixed_sample_reused": true,
+    "numerical_tolerance": 1e-12,
+    "verification_epsilon_rule": "preferred max(1e-7, 1e-6 * max(1, abs(threshold))), reduced near adjacent crossings",
+    "baseline_winner_id": "remote-startup",
+    "baseline_tied_alternative_ids": [],
+    "criteria": [
+      {
+        "criterion_id": "salary",
+        "baseline_weight": 0.35,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 0.8435903602946223,
+          "minimum_inclusive": true,
+          "maximum_inclusive": false
+        },
+        "lower_switch": null,
+        "upper_switch": {
+          "direction": "upper",
+          "change_type": "winner_switch",
+          "threshold_weight": 0.8435903602946223,
+          "new_winner_id": "stable-corp",
+          "new_tied_winner_ids": [],
+          "tie_alternative_ids": [
+            "remote-startup",
+            "stable-corp"
+          ],
+          "mean_utility_at_threshold": 0.5508396810812521,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.8435893602946223,
+          "lower_probe_leader_ids": [
+            "remote-startup"
+          ],
+          "upper_probe_weight": 0.8435913602946223,
+          "upper_probe_leader_ids": [
+            "stable-corp"
+          ],
+          "explanation": "When the weight of Annual salary moves above 0.843590360295, the fixed-sample mean-utility winner changes from Remote startup to Stable corporation."
+        },
+        "explanation": "'remote-startup' remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 0.843590360295; a switch boundary is a tie and is excluded."
+      },
+      {
+        "criterion_id": "work_life_balance",
+        "baseline_weight": 0.25,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 0.9993265259350624,
+          "minimum_inclusive": true,
+          "maximum_inclusive": false
+        },
+        "lower_switch": null,
+        "upper_switch": {
+          "direction": "upper",
+          "change_type": "winner_switch",
+          "threshold_weight": 0.9993265259350624,
+          "new_winner_id": "stable-corp",
+          "new_tied_winner_ids": [],
+          "tie_alternative_ids": [
+            "remote-startup",
+            "stable-corp"
+          ],
+          "mean_utility_at_threshold": 0.4998595822943833,
+          "verified": true,
+          "verification_epsilon": 1e-06,
+          "lower_probe_weight": 0.9993255259350624,
+          "lower_probe_leader_ids": [
+            "remote-startup"
+          ],
+          "upper_probe_weight": 0.9993275259350625,
+          "upper_probe_leader_ids": [
+            "stable-corp"
+          ],
+          "explanation": "When the weight of Work-life balance moves above 0.999326525935, the fixed-sample mean-utility winner changes from Remote startup to Stable corporation."
+        },
+        "explanation": "'remote-startup' remains the unique fixed-sample mean-utility winner inside the robust interval from 0 to 0.999326525935; a switch boundary is a tie and is excluded."
+      },
+      {
+        "criterion_id": "growth",
+        "baseline_weight": 0.25,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 1.0,
+          "minimum_inclusive": true,
+          "maximum_inclusive": true
+        },
+        "lower_switch": null,
+        "upper_switch": null,
+        "explanation": "'remote-startup' remains the unique fixed-sample mean-utility winner across the full permitted weight range from 0 to 1."
+      },
+      {
+        "criterion_id": "commute",
+        "baseline_weight": 0.15,
+        "status": "analyzed",
+        "robust_interval": {
+          "minimum_weight": 0.0,
+          "maximum_weight": 1.0,
+          "minimum_inclusive": true,
+          "maximum_inclusive": true
+        },
+        "lower_switch": null,
+        "upper_switch": null,
+        "explanation": "'remote-startup' remains the unique fixed-sample mean-utility winner across the full permitted weight range from 0 to 1."
+      }
+    ],
+    "explanation": "Each criterion was varied independently from 0 to 1 using the same Monte Carlo sample; winner switches concern mean-utility ranking, not the 60% close-call classification."
+  },
+  "recommendation": {
+    "status": "recommended",
+    "alternative_id": "remote-startup",
+    "tied_alternative_ids": [],
+    "leading_monte_carlo_mean_utility": 0.6635452465276793,
+    "leading_win_probability": 0.9876,
+    "conditional_statement": "Under the confirmed preferences, estimates, constraints, time horizon, and assumptions, Remote startup has the unique highest Monte Carlo mean utility and wins 98.8% of simulated scenarios."
+  }
+}

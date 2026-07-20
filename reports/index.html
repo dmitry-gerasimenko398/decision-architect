@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demonstrations · Decision Architect</title>
+<style>
+
+:root {
+  color-scheme: light;
+  --ink: #172033;
+  --muted: #526079;
+  --line: #d8deea;
+  --paper: #ffffff;
+  --wash: #f4f6fa;
+  --brand: #143c7d;
+  --brand-2: #0b6b67;
+  --accent: #d97706;
+  --danger: #a72c37;
+  --radius: 16px;
+  --shadow: 0 12px 34px rgba(23, 32, 51, 0.09);
+}
+* { box-sizing: border-box; }
+html { background: #e9edf4; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: linear-gradient(180deg, #e8eef9 0, #f6f7fa 380px, #f6f7fa 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+a { color: var(--brand); text-underline-offset: 3px; }
+.page { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 60px; }
+.product-header {
+  display: flex; justify-content: space-between; gap: 24px; align-items: flex-start;
+  color: #fff; background: #102d5c; border-radius: 20px; padding: 28px 32px;
+  box-shadow: var(--shadow); border-top: 5px solid #38a69d;
+}
+.eyebrow { margin: 0 0 4px; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.product-header h1 { margin: 0; font-size: clamp(1.65rem, 4vw, 2.6rem); line-height: 1.1; }
+.product-header p { margin: 10px 0 0; color: #dce8ff; max-width: 760px; }
+.version-stack { min-width: 172px; margin: 0; font-size: .86rem; }
+.version-stack div { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px solid #ffffff35; padding: 4px 0; }
+.version-stack dt { color: #bcd0f1; }
+.version-stack dd { margin: 0; font-weight: 700; }
+.conditionality {
+  margin: 18px 0 0; padding: 15px 18px; border: 2px solid #8b5a04; border-radius: 12px;
+  background: #fff8e7; color: #563600; font-weight: 700;
+}
+main section { margin-top: 24px; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: 0 5px 16px rgba(23,32,51,.045); }
+.recommendation { border-left: 7px solid var(--brand-2); padding: 28px; }
+.recommendation.tie, .recommendation.close { border-left-color: var(--accent); }
+.recommendation.infeasible { border-left-color: var(--danger); }
+.section-kicker { color: var(--brand-2); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: .76rem; margin: 0 0 4px; }
+h2 { margin: 0 0 14px; font-size: 1.45rem; line-height: 1.2; }
+h3 { margin: 24px 0 10px; font-size: 1.08rem; }
+p { margin: 8px 0 14px; }
+.lede { font-size: 1.08rem; color: #34415a; max-width: 880px; }
+.status { display: inline-block; margin-bottom: 12px; padding: 5px 10px; border-radius: 999px; background: #e2f3ef; color: #075b56; font-size: .78rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.status.caution { background: #fff0cf; color: #774800; }
+.status.danger { background: #fde8ea; color: #84212c; }
+.hero-action { margin: 2px 0 8px; font-size: clamp(1.7rem, 4vw, 2.65rem); line-height: 1.05; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin: 20px 0 0; }
+.metric { padding: 14px 16px; border-radius: 12px; background: var(--wash); border: 1px solid #e2e6ee; }
+.metric span { display: block; color: var(--muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.metric strong { display: block; margin-top: 3px; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+caption { text-align: left; padding: 11px 13px; color: var(--muted); font-size: .88rem; font-weight: 700; }
+th, td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+th { background: #eef2f8; color: #25324a; font-size: .8rem; letter-spacing: .025em; }
+tbody tr:last-child td { border-bottom: 0; }
+tr.current-row { outline: 3px solid #143c7d; outline-offset: -3px; background: #edf4ff; }
+.numeric { text-align: right; white-space: nowrap; }
+.id { color: var(--muted); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .84em; }
+.chart { display: block; width: 100%; height: auto; margin: 14px 0; background: #fbfcfe; border: 1px solid var(--line); border-radius: 12px; }
+.compact-chart { max-height: 380px; }
+.grid-line { stroke: #dfe4ec; stroke-width: 1; }
+.range-line { stroke: #143c7d; stroke-width: 8; stroke-linecap: round; }
+.range-cap { stroke: #143c7d; stroke-width: 2; }
+.mean-marker { fill: #b74713; stroke: #fff; stroke-width: 2; }
+.median-marker { fill: #0b6b67; stroke: #fff; stroke-width: 2; }
+.svg-label, .svg-tick, .svg-value, .svg-heading, .svg-region-label { font-family: ui-sans-serif, system-ui, sans-serif; fill: #24324a; }
+.svg-label { font-size: 13px; font-weight: 700; }
+.svg-tick { font-size: 12px; }
+.svg-value { font-size: 12px; font-weight: 800; }
+.svg-heading { font-size: 14px; font-weight: 800; }
+.svg-region-label { font-size: 12px; font-weight: 800; }
+.bar-track { fill: #e7ebf2; }
+.contribution-bar { fill: #287f79; }
+.explore-region { fill: #e4f3ef; }
+.exploit-region { fill: #fff1dc; }
+.zero-line { stroke: #29364d; stroke-width: 2; stroke-dasharray: 7 5; }
+.policy-line { fill: none; stroke: #143c7d; stroke-width: 3; }
+.policy-point { fill: #143c7d; stroke: #fff; stroke-width: 2; }
+.current-point { fill: #d05c16; stroke: #172033; stroke-width: 2; }
+.note { border-left: 4px solid var(--accent); background: #fff8e8; padding: 12px 15px; }
+.distinction { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+.distinction > div { padding: 14px; background: var(--wash); border-radius: 10px; }
+.interval { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-weight: 800; }
+.clean-list { margin: 8px 0; padding-left: 22px; }
+.clean-list li { margin: 6px 0; }
+.empty-state { color: var(--muted); font-style: italic; }
+details { margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+summary { cursor: pointer; padding: 14px 16px; font-weight: 800; color: var(--brand); }
+details[open] summary { border-bottom: 1px solid var(--line); }
+.details-body { padding: 16px; }
+.formula { overflow-x: auto; padding: 12px 14px; border-radius: 8px; background: #182238; color: #f5f7fb; font: .91rem/1.6 ui-monospace, "Cascadia Mono", Consolas, monospace; white-space: pre-wrap; }
+.raw-json { max-height: 580px; overflow: auto; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-footer { color: var(--muted); text-align: center; font-size: .85rem; margin-top: 26px; }
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.demo-card { display: block; color: inherit; text-decoration: none; padding: 22px; border-radius: 14px; border: 1px solid var(--line); background: #fff; box-shadow: 0 4px 14px rgba(23,32,51,.05); }
+.demo-card:hover, .demo-card:focus-visible { outline: 3px solid #2e69ba; outline-offset: 3px; transform: translateY(-2px); }
+.demo-card strong { color: var(--brand); font-size: 1.14rem; }
+.demo-card span { display: block; color: var(--muted); margin-top: 8px; }
+@media (max-width: 760px) {
+  .page { width: min(100% - 20px, 1180px); padding-top: 10px; }
+  .product-header { display: block; padding: 22px; }
+  .version-stack { margin-top: 20px; }
+  .two-column, .distinction { grid-template-columns: 1fr; }
+  .panel { padding: 18px; }
+  th, td { padding: 8px; }
+}
+@media print {
+  @page { margin: 14mm; }
+  html, body { background: #fff; }
+  body { font-size: 10.5pt; color: #000; }
+  .page { width: 100%; margin: 0; padding: 0; }
+  .product-header { color: #000; background: #fff; border: 2px solid #000; box-shadow: none; }
+  .product-header p, .version-stack dt { color: #222; }
+  .panel, details, .chart { box-shadow: none; break-inside: avoid; }
+  section, table, .metric { break-inside: avoid; }
+  details > .details-body { display: block; }
+  .raw-json { max-height: none; }
+  a { color: #000; text-decoration: none; }
+}
+
+</style>
+</head>
+<body>
+<div class="page"><header class="product-header"><div><p class="eyebrow">OpenAI Build Week project</p><h1>Decision Architect</h1><p>Turn an informal personal decision into a transparent, user-confirmed mathematical model with reproducible calculations.</p></div></header><p class="conditionality">This is a conditional recommendation based on the user’s stated preferences, estimates, constraints, and assumptions—not an objectively correct life decision.</p><main><section class="panel"><p class="section-kicker">Local demonstrations</p><h2>Choose a report</h2><p class="lede">Multi-criteria analysis compares one-time choices using weighted utility and uncertainty. Sequential exploration compares trying something new with using the best known option over a finite horizon.</p><div class="demo-grid"><a class="demo-card" href="job-choice-report.html"><p class="eyebrow">Multi-criteria model</p><strong>Job Choice</strong><span>Recommended. Stored leader: Remote Startup.</span></a><a class="demo-card" href="feynman-restaurant-report.html"><p class="eyebrow">Sequential exploration model</p><strong>Feynman-inspired Dishes — 8 Visits</strong><span>Stored result: EXPLORE at 8 remaining opportunities.</span></a><a class="demo-card" href="feynman-restaurant-short-horizon-report.html"><p class="eyebrow">Sequential exploration model</p><strong>Feynman-inspired Dishes — 2 Visits</strong><span>Stored result: EXPLOIT at 2 remaining opportunities.</span></a><a class="demo-card" href="university-transfer-report.html"><p class="eyebrow">Multi-criteria model</p><strong>University Faculty Transfer</strong><span>Recommended. Stored leader: Postpone.</span></a></div></section></main><footer class="report-footer">Decision Architect · Transparent, reproducible decision support</footer></div>
+</body>
+</html>

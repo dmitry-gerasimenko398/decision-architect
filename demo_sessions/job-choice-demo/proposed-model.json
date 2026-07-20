@@ -1,0 +1,165 @@
+{
+  "model_version": "1.0",
+  "model_type": "multi_criteria",
+  "decision_id": "job-choice-example",
+  "title": "Choose between three job offers",
+  "description": "Compare three realistic job options under confirmed personal priorities.",
+  "time_horizon": "One-time choice with an expected two-year stay",
+  "confirmed_by_user": false,
+  "assumptions": [
+    "All salary values are gross annual euros.",
+    "Criterion estimates are treated as independent in the MVP Monte Carlo model.",
+    "The minimum salary constraint applies conservatively to the full triangular salary range.",
+    "Weights and utility anchors have been reviewed and confirmed by the user."
+  ],
+  "notes": "Example data is fictional and is not career advice.",
+  "criteria": [
+    {
+      "id": "salary",
+      "name": "Annual salary",
+      "description": "Gross annual base salary.",
+      "weight": 0.35,
+      "preference_direction": "maximize",
+      "worst_anchor": 45000,
+      "best_anchor": 100000,
+      "unit": "EUR per year"
+    },
+    {
+      "id": "work_life_balance",
+      "name": "Work-life balance",
+      "description": "Expected sustainability of hours, flexibility, and recovery time.",
+      "weight": 0.25,
+      "preference_direction": "maximize",
+      "worst_anchor": 3,
+      "best_anchor": 9,
+      "unit": "rating from 0 to 10"
+    },
+    {
+      "id": "growth",
+      "name": "Learning and growth",
+      "description": "Expected opportunities to learn, gain responsibility, and improve future options.",
+      "weight": 0.25,
+      "preference_direction": "maximize",
+      "worst_anchor": 2,
+      "best_anchor": 10,
+      "unit": "rating from 0 to 10"
+    },
+    {
+      "id": "commute",
+      "name": "Weekly commute time",
+      "description": "Total expected commuting time per week.",
+      "weight": 0.15,
+      "preference_direction": "minimize",
+      "worst_anchor": 120,
+      "best_anchor": 0,
+      "unit": "minutes per week"
+    }
+  ],
+  "hard_constraints": [
+    {
+      "id": "minimum_salary",
+      "name": "Minimum viable salary",
+      "description": "Every supported gross annual base salary must be at least EUR 50000.",
+      "criterion_id": "salary",
+      "operator": ">=",
+      "threshold": 50000
+    }
+  ],
+  "alternatives": [
+    {
+      "id": "stable-corp",
+      "name": "Stable corporation",
+      "description": "Established company with moderate growth and a hybrid commute.",
+      "constraint_results": {
+        "minimum_salary": true
+      },
+      "criterion_estimates": {
+        "salary": {
+          "minimum": 70000,
+          "most_likely": 75000,
+          "maximum": 82000
+        },
+        "work_life_balance": {
+          "minimum": 5,
+          "most_likely": 6,
+          "maximum": 7
+        },
+        "growth": {
+          "minimum": 5,
+          "most_likely": 6,
+          "maximum": 8
+        },
+        "commute": {
+          "minimum": 45,
+          "most_likely": 60,
+          "maximum": 75
+        }
+      }
+    },
+    {
+      "id": "remote-startup",
+      "name": "Remote startup",
+      "description": "Fully remote role with greater upside and uncertainty.",
+      "constraint_results": {
+        "minimum_salary": true
+      },
+      "criterion_estimates": {
+        "salary": {
+          "minimum": 60000,
+          "most_likely": 70000,
+          "maximum": 90000
+        },
+        "work_life_balance": {
+          "minimum": 4,
+          "most_likely": 6,
+          "maximum": 8
+        },
+        "growth": {
+          "minimum": 7,
+          "most_likely": 9,
+          "maximum": 10
+        },
+        "commute": {
+          "minimum": 0,
+          "most_likely": 0,
+          "maximum": 0
+        }
+      }
+    },
+    {
+      "id": "local-nonprofit",
+      "name": "Local nonprofit",
+      "description": "Mission-oriented local role with strong balance and lower salary.",
+      "constraint_results": {
+        "minimum_salary": false
+      },
+      "criterion_estimates": {
+        "salary": {
+          "minimum": 48000,
+          "most_likely": 52000,
+          "maximum": 58000
+        },
+        "work_life_balance": {
+          "minimum": 7,
+          "most_likely": 8,
+          "maximum": 9
+        },
+        "growth": {
+          "minimum": 4,
+          "most_likely": 6,
+          "maximum": 7
+        },
+        "commute": {
+          "minimum": 15,
+          "most_likely": 25,
+          "maximum": 40
+        }
+      }
+    }
+  ],
+  "analysis_settings": {
+    "random_seed": 20260720,
+    "monte_carlo_samples": 10000,
+    "clamp_utility": true
+  }
+}

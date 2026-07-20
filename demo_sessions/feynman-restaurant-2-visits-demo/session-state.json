@@ -1,0 +1,159 @@
+{
+  "session_version": "1.0",
+  "session_slug": "feynman-restaurant-2-visits-demo",
+  "stage": "confirmed",
+  "model_type": {
+    "value": "sequential_exploration",
+    "status": "user_confirmed",
+    "source_type": "system_proposal",
+    "note": "Confirm this structural choice during the model review."
+  },
+  "fields": {
+    "$.analysis_settings.quadrature_points": {
+      "value": 101,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[0]": {
+      "value": "Ratings are net utility, so there is no separate penalty for experimenting.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[1]": {
+      "value": "Each action consumes exactly one remaining visit.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[2]": {
+      "value": "A newly tried dish's rating is received immediately on that visit and remains known for later visits.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[3]": {
+      "value": "The reusable best-known rating updates to the maximum of its old value and the newly observed rating.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[4]": {
+      "value": "There is no discounting of later visits.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[5]": {
+      "value": "Each untried dish is an independent draw from one fixed triangular rating distribution.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[6]": {
+      "value": "Observing one dish does not update the rating distribution of the remaining untried dishes.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.decision_id": {
+      "value": "restaurant-dish-exploration-short-horizon",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.description": {
+      "value": "Choose whether to order the best-known dish or try one untried dish on each of two remaining restaurant visits.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.model_type": {
+      "value": "sequential_exploration",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.model_version": {
+      "value": "1.0",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.new_option_distribution.maximum": {
+      "value": 10,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.new_option_distribution.minimum": {
+      "value": 2,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.new_option_distribution.most_likely": {
+      "value": 6,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.notes": {
+      "value": "The 0-10 values are personal ratings of dining experiences, not objective dish quality. This is the short-horizon comparison.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.state.best_known_value": {
+      "value": 6.5,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.state.remaining_opportunities": {
+      "value": 2,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.state.unseen_options_remaining": {
+      "value": 10,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.time_horizon": {
+      "value": "Exactly 2 remaining restaurant visits, including the next visit",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.title": {
+      "value": "Try a new dish or order the best-known dish — short horizon",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.utility_scale.description": {
+      "value": "0 means the worst meaningful dining experience; 10 means the best realistically imaginable dining experience.",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.utility_scale.maximum": {
+      "value": 10,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.utility_scale.minimum": {
+      "value": 0,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.utility_scale.unit": {
+      "value": "net rating points",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    }
+  },
+  "explicit_confirmation": {
+    "value": "CONFIRM",
+    "status": "user_confirmed",
+    "source_type": "user_statement",
+    "note": "Exact confirmation was supplied after the complete model review."
+  },
+  "model_review": {
+    "status": "user_confirmed",
+    "proposed_model_sha256": "9e40201df44ccc812af72d9cc9915d0f6a2ba0ff2e1bfcf7af3510ec05786754",
+    "review_markdown_sha256": "030272decffd2af4ef139edb0f561cd01eabe2ef38c7b02293b4a3a6e9493f0b",
+    "note": "The complete review was generated by session-check for user display."
+  },
+  "artifacts": {
+    "state": "session-state.json",
+    "proposed_model": "proposed-model.json",
+    "confirmed_model": "confirmed-model.json",
+    "result": "result.json",
+    "report": "report.html",
+    "summary": "session-summary.md"
+  },
+  "confirmed_model_sha256": "949bf7a8a451f96f57e9c2c389fc30a24baa46341bcd10efdf17092a71361c95"
+}

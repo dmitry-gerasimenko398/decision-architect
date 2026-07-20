@@ -1,0 +1,4 @@
+interface:
+  display_name: "Decision Architect"
+  short_description: "Interview, model, and explain personal decisions"
+  default_prompt: "Use $decision-analysis to help me describe and model a personal decision in my own words."

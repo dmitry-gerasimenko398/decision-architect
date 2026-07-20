@@ -1,0 +1,534 @@
+{
+  "session_version": "1.0",
+  "session_slug": "job-choice-demo",
+  "stage": "confirmed",
+  "model_type": {
+    "value": "multi_criteria",
+    "status": "user_confirmed",
+    "source_type": "system_proposal",
+    "note": "Confirm this structural choice during the model review."
+  },
+  "fields": {
+    "$.alternatives[0].constraint_results.minimum_salary": {
+      "value": true,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[0].criterion_estimates.commute.maximum": {
+      "value": 75,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.commute.minimum": {
+      "value": 45,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.commute.most_likely": {
+      "value": 60,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.growth.maximum": {
+      "value": 8,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.growth.minimum": {
+      "value": 5,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.growth.most_likely": {
+      "value": 6,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.salary.maximum": {
+      "value": 82000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.salary.minimum": {
+      "value": 70000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.salary.most_likely": {
+      "value": 75000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.work_life_balance.maximum": {
+      "value": 7,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.work_life_balance.minimum": {
+      "value": 5,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].criterion_estimates.work_life_balance.most_likely": {
+      "value": 6,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[0].description": {
+      "value": "Established company with moderate growth and a hybrid commute.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[0].id": {
+      "value": "stable-corp",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[0].name": {
+      "value": "Stable corporation",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.alternatives[1].constraint_results.minimum_salary": {
+      "value": true,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[1].criterion_estimates.commute.maximum": {
+      "value": 0,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.commute.minimum": {
+      "value": 0,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.commute.most_likely": {
+      "value": 0,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.growth.maximum": {
+      "value": 10,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.growth.minimum": {
+      "value": 7,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.growth.most_likely": {
+      "value": 9,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.salary.maximum": {
+      "value": 90000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.salary.minimum": {
+      "value": 60000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.salary.most_likely": {
+      "value": 70000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.work_life_balance.maximum": {
+      "value": 8,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.work_life_balance.minimum": {
+      "value": 4,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].criterion_estimates.work_life_balance.most_likely": {
+      "value": 6,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[1].description": {
+      "value": "Fully remote role with greater upside and uncertainty.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[1].id": {
+      "value": "remote-startup",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[1].name": {
+      "value": "Remote startup",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.alternatives[2].constraint_results.minimum_salary": {
+      "value": false,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[2].criterion_estimates.commute.maximum": {
+      "value": 40,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.commute.minimum": {
+      "value": 15,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.commute.most_likely": {
+      "value": 25,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.growth.maximum": {
+      "value": 7,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.growth.minimum": {
+      "value": 4,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.growth.most_likely": {
+      "value": 6,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.salary.maximum": {
+      "value": 58000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.salary.minimum": {
+      "value": 48000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.salary.most_likely": {
+      "value": 52000,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.work_life_balance.maximum": {
+      "value": 9,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.work_life_balance.minimum": {
+      "value": 7,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].criterion_estimates.work_life_balance.most_likely": {
+      "value": 8,
+      "status": "user_confirmed",
+      "source_type": "user_estimate"
+    },
+    "$.alternatives[2].description": {
+      "value": "Mission-oriented local role with strong balance and lower salary.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[2].id": {
+      "value": "local-nonprofit",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.alternatives[2].name": {
+      "value": "Local nonprofit",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.analysis_settings.clamp_utility": {
+      "value": true,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.analysis_settings.monte_carlo_samples": {
+      "value": 10000,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.analysis_settings.random_seed": {
+      "value": 20260720,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[0]": {
+      "value": "All salary values are gross annual euros.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[1]": {
+      "value": "Criterion estimates are treated as independent in the MVP Monte Carlo model.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[2]": {
+      "value": "The minimum salary constraint applies conservatively to the full triangular salary range.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.assumptions[3]": {
+      "value": "Weights and utility anchors have been reviewed and confirmed by the user.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[0].best_anchor": {
+      "value": 100000,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[0].description": {
+      "value": "Gross annual base salary.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[0].id": {
+      "value": "salary",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[0].name": {
+      "value": "Annual salary",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[0].preference_direction": {
+      "value": "maximize",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[0].unit": {
+      "value": "EUR per year",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[0].weight": {
+      "value": 0.35,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[0].worst_anchor": {
+      "value": 45000,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[1].best_anchor": {
+      "value": 9,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[1].description": {
+      "value": "Expected sustainability of hours, flexibility, and recovery time.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[1].id": {
+      "value": "work_life_balance",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[1].name": {
+      "value": "Work-life balance",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[1].preference_direction": {
+      "value": "maximize",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[1].unit": {
+      "value": "rating from 0 to 10",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[1].weight": {
+      "value": 0.25,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[1].worst_anchor": {
+      "value": 3,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[2].best_anchor": {
+      "value": 10,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[2].description": {
+      "value": "Expected opportunities to learn, gain responsibility, and improve future options.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[2].id": {
+      "value": "growth",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[2].name": {
+      "value": "Learning and growth",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[2].preference_direction": {
+      "value": "maximize",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[2].unit": {
+      "value": "rating from 0 to 10",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[2].weight": {
+      "value": 0.25,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[2].worst_anchor": {
+      "value": 2,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[3].best_anchor": {
+      "value": 0,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[3].description": {
+      "value": "Total expected commuting time per week.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[3].id": {
+      "value": "commute",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[3].name": {
+      "value": "Weekly commute time",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[3].preference_direction": {
+      "value": "minimize",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[3].unit": {
+      "value": "minutes per week",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.criteria[3].weight": {
+      "value": 0.15,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.criteria[3].worst_anchor": {
+      "value": 120,
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.decision_id": {
+      "value": "job-choice-example",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.description": {
+      "value": "Compare three realistic job options under confirmed personal priorities.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.hard_constraints[0].criterion_id": {
+      "value": "salary",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.hard_constraints[0].description": {
+      "value": "Every supported gross annual base salary must be at least EUR 50000.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.hard_constraints[0].id": {
+      "value": "minimum_salary",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.hard_constraints[0].name": {
+      "value": "Minimum viable salary",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.hard_constraints[0].operator": {
+      "value": ">=",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.hard_constraints[0].threshold": {
+      "value": 50000,
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.model_type": {
+      "value": "multi_criteria",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.model_version": {
+      "value": "1.0",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.notes": {
+      "value": "Example data is fictional and is not career advice.",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    },
+    "$.time_horizon": {
+      "value": "One-time choice with an expected two-year stay",
+      "status": "user_confirmed",
+      "source_type": "user_statement"
+    },
+    "$.title": {
+      "value": "Choose between three job offers",
+      "status": "user_confirmed",
+      "source_type": "system_proposal"
+    }
+  },
+  "explicit_confirmation": {
+    "value": "CONFIRM",
+    "status": "user_confirmed",
+    "source_type": "user_statement",
+    "note": "Exact confirmation was supplied after the complete model review."
+  },
+  "model_review": {
+    "status": "user_confirmed",
+    "proposed_model_sha256": "40a59acfdcd2fac45977a7becb28bd594da02d51fed1244aef099571c78ebac1",
+    "review_markdown_sha256": "114748c651db981336b42bc0fbb5122f5a11d282cfebbad320d4d5e027c31835",
+    "note": "The complete review was generated by session-check for user display."
+  },
+  "artifacts": {
+    "state": "session-state.json",
+    "proposed_model": "proposed-model.json",
+    "confirmed_model": "confirmed-model.json",
+    "result": "result.json",
+    "report": "report.html",
+    "summary": "session-summary.md"
+  },
+  "confirmed_model_sha256": "cdc2efa136c6bcb56516248fe90cb4157205dc7e345078783a7989a322d69577"
+}

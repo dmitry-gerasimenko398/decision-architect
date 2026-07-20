@@ -1,0 +1,38 @@
+{
+  "model_version": "1.0",
+  "model_type": "sequential_exploration",
+  "decision_id": "restaurant-dish-exploration-short-horizon",
+  "title": "Try a new dish or order the best-known dish — short horizon",
+  "description": "Choose whether to order the best-known dish or try one untried dish on each of two remaining restaurant visits.",
+  "time_horizon": "Exactly 2 remaining restaurant visits, including the next visit",
+  "confirmed_by_user": false,
+  "assumptions": [
+    "Ratings are net utility, so there is no separate penalty for experimenting.",
+    "Each action consumes exactly one remaining visit.",
+    "A newly tried dish's rating is received immediately on that visit and remains known for later visits.",
+    "The reusable best-known rating updates to the maximum of its old value and the newly observed rating.",
+    "There is no discounting of later visits.",
+    "Each untried dish is an independent draw from one fixed triangular rating distribution.",
+    "Observing one dish does not update the rating distribution of the remaining untried dishes."
+  ],
+  "notes": "The 0-10 values are personal ratings of dining experiences, not objective dish quality. This is the short-horizon comparison.",
+  "utility_scale": {
+    "minimum": 0,
+    "maximum": 10,
+    "unit": "net rating points",
+    "description": "0 means the worst meaningful dining experience; 10 means the best realistically imaginable dining experience."
+  },
+  "state": {
+    "remaining_opportunities": 2,
+    "unseen_options_remaining": 10,
+    "best_known_value": 6.5
+  },
+  "new_option_distribution": {
+    "minimum": 2,
+    "most_likely": 6,
+    "maximum": 10
+  },
+  "analysis_settings": {
+    "quadrature_points": 101
+  }
+}

@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Try a new dish or order the best-known dish · Decision Architect</title>
+<style>
+
+:root {
+  color-scheme: light;
+  --ink: #172033;
+  --muted: #526079;
+  --line: #d8deea;
+  --paper: #ffffff;
+  --wash: #f4f6fa;
+  --brand: #143c7d;
+  --brand-2: #0b6b67;
+  --accent: #d97706;
+  --danger: #a72c37;
+  --radius: 16px;
+  --shadow: 0 12px 34px rgba(23, 32, 51, 0.09);
+}
+* { box-sizing: border-box; }
+html { background: #e9edf4; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: linear-gradient(180deg, #e8eef9 0, #f6f7fa 380px, #f6f7fa 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+a { color: var(--brand); text-underline-offset: 3px; }
+.page { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 60px; }
+.product-header {
+  display: flex; justify-content: space-between; gap: 24px; align-items: flex-start;
+  color: #fff; background: #102d5c; border-radius: 20px; padding: 28px 32px;
+  box-shadow: var(--shadow); border-top: 5px solid #38a69d;
+}
+.eyebrow { margin: 0 0 4px; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.product-header h1 { margin: 0; font-size: clamp(1.65rem, 4vw, 2.6rem); line-height: 1.1; }
+.product-header p { margin: 10px 0 0; color: #dce8ff; max-width: 760px; }
+.version-stack { min-width: 172px; margin: 0; font-size: .86rem; }
+.version-stack div { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px solid #ffffff35; padding: 4px 0; }
+.version-stack dt { color: #bcd0f1; }
+.version-stack dd { margin: 0; font-weight: 700; }
+.conditionality {
+  margin: 18px 0 0; padding: 15px 18px; border: 2px solid #8b5a04; border-radius: 12px;
+  background: #fff8e7; color: #563600; font-weight: 700;
+}
+main section { margin-top: 24px; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: 0 5px 16px rgba(23,32,51,.045); }
+.recommendation { border-left: 7px solid var(--brand-2); padding: 28px; }
+.recommendation.tie, .recommendation.close { border-left-color: var(--accent); }
+.recommendation.infeasible { border-left-color: var(--danger); }
+.section-kicker { color: var(--brand-2); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: .76rem; margin: 0 0 4px; }
+h2 { margin: 0 0 14px; font-size: 1.45rem; line-height: 1.2; }
+h3 { margin: 24px 0 10px; font-size: 1.08rem; }
+p { margin: 8px 0 14px; }
+.lede { font-size: 1.08rem; color: #34415a; max-width: 880px; }
+.status { display: inline-block; margin-bottom: 12px; padding: 5px 10px; border-radius: 999px; background: #e2f3ef; color: #075b56; font-size: .78rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.status.caution { background: #fff0cf; color: #774800; }
+.status.danger { background: #fde8ea; color: #84212c; }
+.hero-action { margin: 2px 0 8px; font-size: clamp(1.7rem, 4vw, 2.65rem); line-height: 1.05; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin: 20px 0 0; }
+.metric { padding: 14px 16px; border-radius: 12px; background: var(--wash); border: 1px solid #e2e6ee; }
+.metric span { display: block; color: var(--muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.metric strong { display: block; margin-top: 3px; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+caption { text-align: left; padding: 11px 13px; color: var(--muted); font-size: .88rem; font-weight: 700; }
+th, td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+th { background: #eef2f8; color: #25324a; font-size: .8rem; letter-spacing: .025em; }
+tbody tr:last-child td { border-bottom: 0; }
+tr.current-row { outline: 3px solid #143c7d; outline-offset: -3px; background: #edf4ff; }
+.numeric { text-align: right; white-space: nowrap; }
+.id { color: var(--muted); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .84em; }
+.chart { display: block; width: 100%; height: auto; margin: 14px 0; background: #fbfcfe; border: 1px solid var(--line); border-radius: 12px; }
+.compact-chart { max-height: 380px; }
+.grid-line { stroke: #dfe4ec; stroke-width: 1; }
+.range-line { stroke: #143c7d; stroke-width: 8; stroke-linecap: round; }
+.range-cap { stroke: #143c7d; stroke-width: 2; }
+.mean-marker { fill: #b74713; stroke: #fff; stroke-width: 2; }
+.median-marker { fill: #0b6b67; stroke: #fff; stroke-width: 2; }
+.svg-label, .svg-tick, .svg-value, .svg-heading, .svg-region-label { font-family: ui-sans-serif, system-ui, sans-serif; fill: #24324a; }
+.svg-label { font-size: 13px; font-weight: 700; }
+.svg-tick { font-size: 12px; }
+.svg-value { font-size: 12px; font-weight: 800; }
+.svg-heading { font-size: 14px; font-weight: 800; }
+.svg-region-label { font-size: 12px; font-weight: 800; }
+.bar-track { fill: #e7ebf2; }
+.contribution-bar { fill: #287f79; }
+.explore-region { fill: #e4f3ef; }
+.exploit-region { fill: #fff1dc; }
+.zero-line { stroke: #29364d; stroke-width: 2; stroke-dasharray: 7 5; }
+.policy-line { fill: none; stroke: #143c7d; stroke-width: 3; }
+.policy-point { fill: #143c7d; stroke: #fff; stroke-width: 2; }
+.current-point { fill: #d05c16; stroke: #172033; stroke-width: 2; }
+.note { border-left: 4px solid var(--accent); background: #fff8e8; padding: 12px 15px; }
+.distinction { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+.distinction > div { padding: 14px; background: var(--wash); border-radius: 10px; }
+.interval { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-weight: 800; }
+.clean-list { margin: 8px 0; padding-left: 22px; }
+.clean-list li { margin: 6px 0; }
+.empty-state { color: var(--muted); font-style: italic; }
+details { margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+summary { cursor: pointer; padding: 14px 16px; font-weight: 800; color: var(--brand); }
+details[open] summary { border-bottom: 1px solid var(--line); }
+.details-body { padding: 16px; }
+.formula { overflow-x: auto; padding: 12px 14px; border-radius: 8px; background: #182238; color: #f5f7fb; font: .91rem/1.6 ui-monospace, "Cascadia Mono", Consolas, monospace; white-space: pre-wrap; }
+.raw-json { max-height: 580px; overflow: auto; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-footer { color: var(--muted); text-align: center; font-size: .85rem; margin-top: 26px; }
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.demo-card { display: block; color: inherit; text-decoration: none; padding: 22px; border-radius: 14px; border: 1px solid var(--line); background: #fff; box-shadow: 0 4px 14px rgba(23,32,51,.05); }
+.demo-card:hover, .demo-card:focus-visible { outline: 3px solid #2e69ba; outline-offset: 3px; transform: translateY(-2px); }
+.demo-card strong { color: var(--brand); font-size: 1.14rem; }
+.demo-card span { display: block; color: var(--muted); margin-top: 8px; }
+@media (max-width: 760px) {
+  .page { width: min(100% - 20px, 1180px); padding-top: 10px; }
+  .product-header { display: block; padding: 22px; }
+  .version-stack { margin-top: 20px; }
+  .two-column, .distinction { grid-template-columns: 1fr; }
+  .panel { padding: 18px; }
+  th, td { padding: 8px; }
+}
+@media print {
+  @page { margin: 14mm; }
+  html, body { background: #fff; }
+  body { font-size: 10.5pt; color: #000; }
+  .page { width: 100%; margin: 0; padding: 0; }
+  .product-header { color: #000; background: #fff; border: 2px solid #000; box-shadow: none; }
+  .product-header p, .version-stack dt { color: #222; }
+  .panel, details, .chart { box-shadow: none; break-inside: avoid; }
+  section, table, .metric { break-inside: avoid; }
+  details > .details-body { display: block; }
+  .raw-json { max-height: none; }
+  a { color: #000; text-decoration: none; }
+}
+
+</style>
+</head>
+<body>
+<div class="page"><header class="product-header"><div><p class="eyebrow">Decision Architect</p><h1>Try a new dish or order the best-known dish</h1><p>Feynman-inspired exploration model · Decision ID <span class="id">restaurant-dish-exploration</span></p></div><dl class="version-stack"><div><dt>Model</dt><dd>1.0</dd></div><div><dt>Result</dt><dd>1.0</dd></div><div><dt>Engine</dt><dd>0.4.0</dd></div><div><dt>Report</dt><dd>1.0.0-rc1</dd></div></dl></header><p class="conditionality">This is a conditional recommendation based on the user’s stated preferences, estimates, constraints, and assumptions—not an objectively correct life decision.</p><main><section class="panel recommendation" aria-labelledby="recommendation-heading"><p class="section-kicker">Result</p><span class="status">Explore preferred under this model</span><h2 class="hero-action" id="recommendation-heading">EXPLORE</h2><p class="lede">Under the stated utility scale, triangular estimates, and 8-opportunity horizon, explore is preferable; this is conditional on those inputs and assumptions, not an objectively correct life choice.</p><div class="metrics"><div class="metric"><span>Expected optimal total utility</span><strong>57.5382</strong></div><div class="metric"><span>Exploit value</span><strong>56.2533</strong></div><div class="metric"><span>Explore value</span><strong>57.5382</strong></div><div class="metric"><span>Explore − exploit</span><strong>1.2849</strong></div></div></section><section class="panel" aria-labelledby="state-heading"><p class="section-kicker">Current state</p><h2 id="state-heading">What the policy starts from</h2><div class="metrics"><div class="metric"><span>Remaining opportunities</span><strong>8</strong></div><div class="metric"><span>Unseen options</span><strong>10</strong></div><div class="metric"><span>Best-known value</span><strong>6.5</strong></div><div class="metric"><span>Utility scale</span><strong>0 to 10 net rating points</strong></div></div><h3>Uncertain quality of a new option</h3><div class="metrics"><div class="metric"><span>Minimum</span><strong>2</strong></div><div class="metric"><span>Most likely</span><strong>6</strong></div><div class="metric"><span>Maximum</span><strong>10</strong></div></div><p>0 means the worst meaningful dining experience; 10 means the best realistically imaginable dining experience.</p></section><section class="panel" aria-labelledby="policy-heading"><p class="section-kicker">Time horizon</p><h2 id="policy-heading">How the recommendation changes with remaining opportunities</h2><p>Action advantage equals stored explore value minus stored exploit value. Positive favors explore; negative favors exploit; values inside the recorded tolerance are indifferent.</p><svg class="chart" viewBox="0 0 780 360" role="img" aria-labelledby="horizon-chart-title horizon-chart-desc"><title id="horizon-chart-title">Explore advantage by remaining opportunities</title><desc id="horizon-chart-desc">At 1 remaining opportunity the stored action is EXPLOIT, with advantage -0.5000. At 2 remaining opportunities the stored action is EXPLOIT, with advantage -0.0537. At 3 remaining opportunities the stored action is EXPLORE, with advantage 0.3925. At 4 remaining opportunities the stored action is EXPLORE, with advantage 0.6981. At 5 remaining opportunities the stored action is EXPLORE, with advantage 0.9097. At 6 remaining opportunities the stored action is EXPLORE, with advantage 1.0659. At 7 remaining opportunities the stored action is EXPLORE, with advantage 1.1871. At 8 remaining opportunities the stored action is EXPLORE, with advantage 1.2849. Positive values favor explore; negative values favor exploit. The square marks the current horizon.</desc><rect x="74" y="42" width="672" height="128.00" class="explore-region" /><rect x="74" y="170.00" width="672" height="128.00" class="exploit-region" /><line x1="74" y1="170.00" x2="746" y2="170.00" class="zero-line" /><text x="84" y="60" class="svg-region-label">EXPLORE region (+)</text><text x="84" y="288" class="svg-region-label">EXPLOIT region (-)</text><path d="M 74.00 219.81 L 170.00 175.35 L 266.00 130.90 L 362.00 100.46 L 458.00 79.38 L 554.00 63.82 L 650.00 51.74 L 746.00 42.00" class="policy-line" /><circle cx="74.00" cy="219.81" r="5" class="policy-point"><title>1 opportunities: EXPLOIT; advantage -0.5000</title></circle><text x="74.00" y="326" text-anchor="middle" class="svg-tick">1</text><circle cx="170.00" cy="175.35" r="5" class="policy-point"><title>2 opportunities: EXPLOIT; advantage -0.0537</title></circle><text x="170.00" y="326" text-anchor="middle" class="svg-tick">2</text><circle cx="266.00" cy="130.90" r="5" class="policy-point"><title>3 opportunities: EXPLORE; advantage 0.3925</title></circle><text x="266.00" y="326" text-anchor="middle" class="svg-tick">3</text><circle cx="362.00" cy="100.46" r="5" class="policy-point"><title>4 opportunities: EXPLORE; advantage 0.6981</title></circle><text x="362.00" y="326" text-anchor="middle" class="svg-tick">4</text><circle cx="458.00" cy="79.38" r="5" class="policy-point"><title>5 opportunities: EXPLORE; advantage 0.9097</title></circle><text x="458.00" y="326" text-anchor="middle" class="svg-tick">5</text><circle cx="554.00" cy="63.82" r="5" class="policy-point"><title>6 opportunities: EXPLORE; advantage 1.0659</title></circle><text x="554.00" y="326" text-anchor="middle" class="svg-tick">6</text><circle cx="650.00" cy="51.74" r="5" class="policy-point"><title>7 opportunities: EXPLORE; advantage 1.1871</title></circle><text x="650.00" y="326" text-anchor="middle" class="svg-tick">7</text><rect x="740.00" y="36.00" width="12" height="12" class="policy-point current-point"><title>8 opportunities: EXPLORE; advantage 1.2849; current horizon</title></rect><text x="746.00" y="326" text-anchor="middle" class="svg-tick">8</text><text x="410.00" y="352" text-anchor="middle" class="svg-label">Remaining opportunities</text><text x="18" y="170.00" text-anchor="middle" transform="rotate(-90 18 170)" class="svg-label">Explore − exploit</text></svg><p class="note">Chart alternative: every plotted horizon appears in the numerical policy table below.</p><div class="table-wrap"><table><caption>Complete stored horizon policy</caption><thead><tr><th scope="col">Remaining opportunities</th><th scope="col" class="numeric">Exploit value</th><th scope="col" class="numeric">Explore value</th><th scope="col" class="numeric">Action advantage</th><th scope="col">Recommended action</th></tr></thead><tbody><tr><th scope="row">1</th><td class="numeric">6.5</td><td class="numeric">6</td><td class="numeric">-0.5</td><td><strong>EXPLOIT</strong></td></tr><tr><th scope="row">2</th><td class="numeric">13</td><td class="numeric">12.9463</td><td class="numeric">-0.0537</td><td><strong>EXPLOIT</strong></td></tr><tr><th scope="row">3</th><td class="numeric">19.5</td><td class="numeric">19.8925</td><td class="numeric">0.3925</td><td><strong>EXPLORE</strong></td></tr><tr><th scope="row">4</th><td class="numeric">26.3925</td><td class="numeric">27.0906</td><td class="numeric">0.6981</td><td><strong>EXPLORE</strong></td></tr><tr><th scope="row">5</th><td class="numeric">33.5906</td><td class="numeric">34.5003</td><td class="numeric">0.9097</td><td><strong>EXPLORE</strong></td></tr><tr><th scope="row">6</th><td class="numeric">41.0003</td><td class="numeric">42.0662</td><td class="numeric">1.0659</td><td><strong>EXPLORE</strong></td></tr><tr><th scope="row">7</th><td class="numeric">48.5662</td><td class="numeric">49.7533</td><td class="numeric">1.1871</td><td><strong>EXPLORE</strong></td></tr><tr class="current-row"><th scope="row">8 (current horizon)</th><td class="numeric">56.2533</td><td class="numeric">57.5382</td><td class="numeric">1.2849</td><td><strong>EXPLORE</strong></td></tr></tbody></table></div><h3>Action-switch points</h3><ul class="clean-list"><li>At <strong>3</strong> remaining opportunities, the stored policy changes from <strong>EXPLOIT</strong> to <strong>EXPLORE</strong>.</li></ul></section><section class="panel" aria-labelledby="audit-heading"><p class="section-kicker">Assumptions & audit trail</p><h2 id="audit-heading">What this result depends on</h2><div class="two-column"><div><h3>User-confirmed assumptions</h3><ul class="clean-list"><li>Ratings are net utility, so there is no separate penalty for experimenting.</li><li>Each action consumes exactly one remaining visit.</li><li>A newly tried dish&#x27;s rating is received immediately on that visit and remains known for later visits.</li><li>The reusable best-known rating updates to the maximum of its old value and the newly observed rating.</li><li>There is no discounting of later visits.</li><li>Each untried dish is an independent draw from one fixed triangular rating distribution.</li><li>Observing one dish does not update the rating distribution of the remaining untried dishes.</li></ul></div><div><h3>Warnings</h3><ul class="clean-list"><li>Continuous expectations use deterministic midpoint quantile quadrature, so values are numerical approximations.</li></ul></div></div><div class="two-column"><div class="table-wrap"><table><caption>Calculation method recorded in the result</caption><tbody><tr><th scope="row">Name</th><td>finite_horizon_dynamic_programming</td></tr><tr><th scope="row">Expectation Method</th><td>midpoint_quantile_quadrature</td></tr><tr><th scope="row">Quadrature Points</th><td>101</td></tr><tr><th scope="row">Action Comparison Tolerance</th><td>1e-10</td></tr><tr><th scope="row">Memoization Decimal Places</th><td>12</td></tr><tr><th scope="row">Uncertainty Distribution</th><td>triangular</td></tr><tr><th scope="row">Discount Factor</th><td>1</td></tr></tbody></table></div><div class="table-wrap"><table><caption>Reproducibility metadata recorded in the result</caption><tbody><tr><th scope="row">Deterministic</th><td>True</td></tr><tr><th scope="row">Random Sampling</th><td>False</td></tr><tr><th scope="row">Quadrature Points</th><td>101</td></tr><tr><th scope="row">Memoization Decimal Places</th><td>12</td></tr><tr><th scope="row">Memoized State Count</th><td>1449</td></tr></tbody></table></div></div><details><summary>Mathematical details</summary><div class="details-body">
+<p>The report displays stored dynamic-programming output; it does not rerun the model.</p>
+<pre class="formula">V(0, u, b) = 0
+
+Exploit:
+b + V(t − 1, u, b)
+
+Explore:
+E[X + V(t − 1, u − 1, max(b, X))]
+
+Optimal value:
+max(exploit, explore)</pre>
+<p>The expectation uses deterministic midpoint quantile quadrature with the recorded point count. The engine memoizes best-known values at the recorded decimal precision and compares actions using the recorded tolerance.</p>
+<p>Assumptions include no discounting, no learning of the distribution, and independent new-option draws from one triangular distribution. Exploration receives the new draw immediately. This is a Feynman-inspired finite-horizon model, not a claim of perfect historical reproduction.</p>
+</div></details><details><summary>Raw audit data (escaped source result JSON)</summary><div class="details-body"><pre class="formula raw-json">{
+  &quot;result_version&quot;: &quot;1.0&quot;,
+  &quot;model_version&quot;: &quot;1.0&quot;,
+  &quot;model_type&quot;: &quot;sequential_exploration&quot;,
+  &quot;decision_id&quot;: &quot;restaurant-dish-exploration&quot;,
+  &quot;engine_version&quot;: &quot;0.4.0&quot;,
+  &quot;status&quot;: &quot;completed&quot;,
+  &quot;decision_metadata&quot;: {
+    &quot;title&quot;: &quot;Try a new dish or order the best-known dish&quot;,
+    &quot;description&quot;: &quot;Choose whether to order the best-known dish or try one untried dish on each remaining restaurant visit.&quot;,
+    &quot;time_horizon&quot;: &quot;Exactly 8 remaining restaurant visits, including the next visit&quot;
+  },
+  &quot;recommended_action&quot;: &quot;explore&quot;,
+  &quot;recommendation_status&quot;: &quot;explore_preferred&quot;,
+  &quot;expected_total_utility&quot;: 57.53818075244744,
+  &quot;exploit_value&quot;: 56.25327198359611,
+  &quot;explore_value&quot;: 57.53818075244744,
+  &quot;action_advantage&quot;: 1.2849087688513308,
+  &quot;conditional_statement&quot;: &quot;Under the stated utility scale, triangular estimates, and 8-opportunity horizon, explore is preferable; this is conditional on those inputs and assumptions, not an objectively correct life choice.&quot;,
+  &quot;current_state&quot;: {
+    &quot;remaining_opportunities&quot;: 8,
+    &quot;unseen_options_remaining&quot;: 10,
+    &quot;best_known_value&quot;: 6.5
+  },
+  &quot;new_option_distribution&quot;: {
+    &quot;minimum&quot;: 2.0,
+    &quot;most_likely&quot;: 6.0,
+    &quot;maximum&quot;: 10.0
+  },
+  &quot;utility_scale&quot;: {
+    &quot;minimum&quot;: 0.0,
+    &quot;maximum&quot;: 10.0,
+    &quot;unit&quot;: &quot;net rating points&quot;,
+    &quot;description&quot;: &quot;0 means the worst meaningful dining experience; 10 means the best realistically imaginable dining experience.&quot;
+  },
+  &quot;method&quot;: {
+    &quot;name&quot;: &quot;finite_horizon_dynamic_programming&quot;,
+    &quot;expectation_method&quot;: &quot;midpoint_quantile_quadrature&quot;,
+    &quot;quadrature_points&quot;: 101,
+    &quot;action_comparison_tolerance&quot;: 1e-10,
+    &quot;memoization_decimal_places&quot;: 12,
+    &quot;uncertainty_distribution&quot;: &quot;triangular&quot;,
+    &quot;discount_factor&quot;: 1
+  },
+  &quot;assumptions&quot;: [
+    &quot;Ratings are net utility, so there is no separate penalty for experimenting.&quot;,
+    &quot;Each action consumes exactly one remaining visit.&quot;,
+    &quot;A newly tried dish&#x27;s rating is received immediately on that visit and remains known for later visits.&quot;,
+    &quot;The reusable best-known rating updates to the maximum of its old value and the newly observed rating.&quot;,
+    &quot;There is no discounting of later visits.&quot;,
+    &quot;Each untried dish is an independent draw from one fixed triangular rating distribution.&quot;,
+    &quot;Observing one dish does not update the rating distribution of the remaining untried dishes.&quot;
+  ],
+  &quot;warnings&quot;: [
+    &quot;Continuous expectations use deterministic midpoint quantile quadrature, so values are numerical approximations.&quot;
+  ],
+  &quot;reproducibility&quot;: {
+    &quot;deterministic&quot;: true,
+    &quot;random_sampling&quot;: false,
+    &quot;quadrature_points&quot;: 101,
+    &quot;memoization_decimal_places&quot;: 12,
+    &quot;memoized_state_count&quot;: 1449
+  },
+  &quot;policy_by_remaining_opportunities&quot;: [
+    {
+      &quot;remaining_opportunities&quot;: 1,
+      &quot;exploit_value&quot;: 6.5,
+      &quot;explore_value&quot;: 6.0,
+      &quot;recommended_action&quot;: &quot;exploit&quot;,
+      &quot;action_advantage&quot;: -0.5
+    },
+    {
+      &quot;remaining_opportunities&quot;: 2,
+      &quot;exploit_value&quot;: 13.0,
+      &quot;explore_value&quot;: 12.946268589889446,
+      &quot;recommended_action&quot;: &quot;exploit&quot;,
+      &quot;action_advantage&quot;: -0.05373141011055438
+    },
+    {
+      &quot;remaining_opportunities&quot;: 3,
+      &quot;exploit_value&quot;: 19.5,
+      &quot;explore_value&quot;: 19.89253717977889,
+      &quot;recommended_action&quot;: &quot;explore&quot;,
+      &quot;action_advantage&quot;: 0.39253717977889124
+    },
+    {
+      &quot;remaining_opportunities&quot;: 4,
+      &quot;exploit_value&quot;: 26.39253717977889,
+      &quot;explore_value&quot;: 27.09061096474947,
+      &quot;recommended_action&quot;: &quot;explore&quot;,
+      &quot;action_advantage&quot;: 0.6980737849705783
+    },
+    {
+      &quot;remaining_opportunities&quot;: 5,
+      &quot;exploit_value&quot;: 33.59061096474947,
+      &quot;explore_value&quot;: 34.50030250077533,
+      &quot;recommended_action&quot;: &quot;explore&quot;,
+      &quot;action_advantage&quot;: 0.9096915360258535
+    },
+    {
+      &quot;remaining_opportunities&quot;: 6,
+      &quot;exploit_value&quot;: 41.00030250077533,
+      &quot;explore_value&quot;: 42.0661591378125,
+      &quot;recommended_action&quot;: &quot;explore&quot;,
+      &quot;action_advantage&quot;: 1.0658566370371716
+    },
+    {
+      &quot;remaining_opportunities&quot;: 7,
+      &quot;exploit_value&quot;: 48.5661591378125,
+      &quot;explore_value&quot;: 49.75327198359611,
+      &quot;recommended_action&quot;: &quot;explore&quot;,
+      &quot;action_advantage&quot;: 1.1871128457836093
+    },
+    {
+      &quot;remaining_opportunities&quot;: 8,
+      &quot;exploit_value&quot;: 56.25327198359611,
+      &quot;explore_value&quot;: 57.53818075244744,
+      &quot;recommended_action&quot;: &quot;explore&quot;,
+      &quot;action_advantage&quot;: 1.2849087688513308
+    }
+  ],
+  &quot;action_switch_points&quot;: [
+    {
+      &quot;remaining_opportunities&quot;: 3,
+      &quot;previous_action&quot;: &quot;exploit&quot;,
+      &quot;recommended_action&quot;: &quot;explore&quot;
+    }
+  ]
+}
+</pre></div></details></section></main><footer class="report-footer">Decision Architect · Transparent, reproducible decision support</footer></div>
+</body>
+</html>
